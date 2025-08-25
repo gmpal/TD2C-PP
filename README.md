@@ -1,12 +1,12 @@
-# Causal Discovery in Multivariate Time Series through Mutual Information Featurization (TD2C) - PREPRINT REPOSITORY (PP)
+# Causal Discovery in Multivariate Time Series through Mutual Information Featurization (Preprint)
 
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Paper](https://img.shields.io/badge/paper-arXiv-red.svg)](https://arxiv.org/abs/2508.01848) 
+[![Paper](https://img.shields.io/badge/paper-arXiv-red.svg)](https://arxiv.org/abs/2508.01848)
 
-This repository contains the official implementation and all resources needed to reproduce the results for the paper: **"Causal Discovery in Multivariate Time Series through Mutual Information Featurization"**.
 
----
+This repository contains the official implementation and all resources needed to reproduce the results for the paper: **["Causal Discovery in Multivariate Time Series through Mutual Information Featurization"](https://arxiv.org/abs/2508.01848)** by [Gian Marco Paldino](https://scholar.google.com/citations?user=AkTzq_8AAAAJ&hl=en) and [Gianluca Bontempi](https://gianluca.bontempi.web.ulb.be/), Machine Learning Group, ULB, Brussels.
+
 
 ## Abstract
 
