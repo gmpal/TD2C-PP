@@ -19,7 +19,7 @@ Discovering causal relationships in complex multivariate time series is a fundam
 - **State-of-the-Art Performance**: Achieves SOTA performance, showing significant advantages in high-dimensional and non-linear systems.
 
 ## Key Results
-![F1-Score on Realistic Benchmarks](results/real_results/figures/summary_boxplot_all_datasets_F1-Score.png)
+![F1-Score on Realistic Benchmarks](f1.png)
 *F1-score distribution on realistic benchmark datasets. TD2C, trained only on synthetic data, consistently demonstrates strong and reliable performance in a zero-shot setting.*
 
 ---
