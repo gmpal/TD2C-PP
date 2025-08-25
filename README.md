@@ -2,7 +2,7 @@
 
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Paper](https://img.shields.io/badge/paper-arXiv-red.svg)](https://arxiv.org/abs/YOUR_ARXIV_ID_HERE) <!-- TODO: Replace with your actual ArXiv ID when available -->
+[![Paper](https://img.shields.io/badge/paper-arXiv-red.svg)](https://arxiv.org/abs/2508.01848) 
 
 This repository contains the official implementation and all resources needed to reproduce the results for the paper: **"Causal Discovery in Multivariate Time Series through Mutual Information Featurization"**.
 
@@ -78,9 +78,7 @@ cd IJF-TD2C
 ### 2. Download and Set Up the Data Folder
 The `data` directory, which contains all datasets, pre-computed features, and cached results, is approximately 500MB and is not stored in this Git repository. You must download it separately to reproduce the analysis without re-running the most computationally expensive steps.
 
-**For long-term archival and a persistent DOI, we recommend using a service like [Zenodo](https://zenodo.org/) or [Figshare](https://figshare.com/).**
-
-**[>> Download the `data.zip` file here <<](https://your-hosting-provider.com/data.zip)** <!-- ### TODO: Replace this with your actual download link -->
+**[>> Download the `data.zip` file here <<](https://drive.google.com/file/d/1z8cHkUTe7TlvWwqBlpoEsukWaSsvFC26/view?usp=sharing)** 
 
 Once downloaded, unzip the file and place the resulting `data` folder in the root of the repository:
 ```bash
@@ -177,15 +175,17 @@ python reproduce/py_scripts/09_analyze_features.py
 ---
 
 ## Citation
-If you use this code or the TD2C framework in your research, please cite our paper:
+If you use this code or the TD2C framework in your research, please cite our preprint. 
 
 ```bibtex
-@article{paldino2024td2c,
-  title={Causal Discovery in Multivariate Time Series through Mutual Information Featurization},
-  author={Paldino, Gian Marco and Bontempi, Gianluca},
-  journal={International Journal of Forecasting},
-  year={2024},
-  % TODO: Add volume, pages, doi when available
+@misc{paldino2025causal,
+      title={Causal Discovery in Multivariate Time Series through Mutual Information Featurization}, 
+      author={Gian Marco Paldino and Gianluca Bontempi},
+      year={2025},
+      eprint={2508.01848},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2508.01848}, 
 }
 ```
 
