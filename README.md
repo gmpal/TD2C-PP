@@ -7,6 +7,7 @@
 
 This repository contains the official implementation and all resources needed to reproduce the results for the paper: **["Causal Discovery in Multivariate Time Series through Mutual Information Featurization"](https://arxiv.org/abs/2508.01848)** by [Gian Marco Paldino](https://scholar.google.com/citations?user=AkTzq_8AAAAJ&hl=en) and [Gianluca Bontempi](https://gianluca.bontempi.web.ulb.be/), Machine Learning Group, ULB, Brussels.
 
+_Note: we are currently writing instructions on how to test our trained model on *your own* time series data with python, as well as deploying it to a server where users can simply upload their time series and retrieve the estimated causal DAG. Stay tuned._
 
 ## Abstract
 
