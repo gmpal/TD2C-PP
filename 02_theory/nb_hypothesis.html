@@ -1,0 +1,850 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The TD2C Hypothesis: Information Asymmetry &#8212; TD2C: Temporal Dependency to Causality</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '02_theory/nb_hypothesis';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Synthetic Data Generation" href="../03_pipeline/nb_data_generation.html" />
+    <link rel="prev" title="Background: Causal Discovery and The Information Theoretic Approach" href="nb_background.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">TD2C: Temporal Dependency to Causality</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Causal Discovery in Multivariate Time Series
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_getting_started/nb_installation.html">Installation &amp; Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_getting_started/nb_quick_usage.html">Quick Usage: The “Hello World” of Causality</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Theoretical Foundations</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_background.html">Background: Causal Discovery and The Information Theoretic Approach</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">The TD2C Hypothesis: Information Asymmetry</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Pipeline</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../03_pipeline/nb_data_generation.html">Synthetic Data Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_pipeline/nb_feature_engineering.html">Feature Engineering: Operationalizing Causality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_pipeline/nb_supervised_model.html">The Supervised Model: From Descriptors to Probabilities</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Benchmarking</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../04_benchmarking/nb_setup.html">Benchmarking Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_benchmarking/nb_results_synthetic.html">Results: Generalization to Unseen Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_benchmarking/nb_results_realworld.html">Results: Zero-Shot Real-World Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_benchmarking/nb_computational_cost.html">Computational Scalability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Application</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../05_application/nb_inference_user_data.html">Inference on Your Own Data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendices/nb_descriptors_list.html">Appendix A: List of Causal Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/nb_references.html">Appendix A: List of Causal Descriptors</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=lab/tree/02_theory/nb_hypothesis.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/executablebooks/jupyter-book/blob/master/02_theory/nb_hypothesis.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/02_theory/nb_hypothesis.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>The TD2C Hypothesis: Information Asymmetry</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">The TD2C Hypothesis: Information Asymmetry</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-three-scenarios">The Three Scenarios</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scenario-1-simple-chain">Scenario 1: Simple Chain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scenario-2-feedback-and-self-loops">Scenario 2: Feedback and Self-Loops</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scenario-3-latent-confounders">Scenario 3: Latent Confounders</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operationalizing-the-hypothesis">Operationalizing the Hypothesis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-temporal-markov-blanket">Visualizing the Temporal Markov Blanket</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#the-td2c-hypothesis">The TD2C Hypothesis</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-for-the-dynamic-case">1. Assumptions for the Dynamic Case</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-temporally-aware-markov-blanket">2. A Temporally-Aware Markov Blanket</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-hypothesis-information-asymmetry">3. The Hypothesis: Information Asymmetry</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#path-counting-experiment">Path Counting Experiment</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutual-information-estimation">4. Mutual Information Estimation</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="the-td2c-hypothesis-information-asymmetry">
+<h1>The TD2C Hypothesis: Information Asymmetry<a class="headerlink" href="#the-td2c-hypothesis-information-asymmetry" title="Link to this heading">#</a></h1>
+<p>Our framework is built on a physical intuition: <strong>Causality creates an irreversible flow of information.</strong></p>
+<p>Consider two variables <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>. If <span class="math notranslate nohighlight">\(X \to Y\)</span>, information flows from the past of <span class="math notranslate nohighlight">\(X\)</span> to the present of <span class="math notranslate nohighlight">\(Y\)</span>. If we try to look at it backwards (from <span class="math notranslate nohighlight">\(Y\)</span> to <span class="math notranslate nohighlight">\(X\)</span>), the statistical signature looks different.</p>
+<section id="the-three-scenarios">
+<h2>The Three Scenarios<a class="headerlink" href="#the-three-scenarios" title="Link to this heading">#</a></h2>
+<p>We analyzed this asymmetry by counting “open paths” of information flow in three increasingly complex causal graphs.</p>
+<section id="scenario-1-simple-chain">
+<h3>Scenario 1: Simple Chain<a class="headerlink" href="#scenario-1-simple-chain" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[ X_{t-1} \to X_t \to Y_{t+1} \]</div>
+<p>Here, the asymmetry is obvious. <span class="math notranslate nohighlight">\(X\)</span> helps predict <span class="math notranslate nohighlight">\(Y\)</span>, but <span class="math notranslate nohighlight">\(Y\)</span> does not help predict <span class="math notranslate nohighlight">\(X\)</span> (before <span class="math notranslate nohighlight">\(Y\)</span> happens).</p>
+</section>
+<section id="scenario-2-feedback-and-self-loops">
+<h3>Scenario 2: Feedback and Self-Loops<a class="headerlink" href="#scenario-2-feedback-and-self-loops" title="Link to this heading">#</a></h3>
+<p>When systems have strong auto-correlation (<span class="math notranslate nohighlight">\(Y_{t-1} \to Y_t\)</span>) or feedback loops, standard Granger tests often fail because “everything correlates with everything.” However, our analysis shows that the <strong>quantity</strong> of information transferred is still higher in the causal direction than the anti-causal direction.</p>
+</section>
+<section id="scenario-3-latent-confounders">
+<h3>Scenario 3: Latent Confounders<a class="headerlink" href="#scenario-3-latent-confounders" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[ X \leftarrow L \rightarrow Y \]</div>
+<p>This is the hardest case. Both <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are correlated due to <span class="math notranslate nohighlight">\(L\)</span>. However, the <em>temporal structure</em> of how <span class="math notranslate nohighlight">\(L\)</span> affects <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> creates a subtle but detectable difference in the distribution of conditional mutual information.</p>
+</section>
+</section>
+<section id="operationalizing-the-hypothesis">
+<h2>Operationalizing the Hypothesis<a class="headerlink" href="#operationalizing-the-hypothesis" title="Link to this heading">#</a></h2>
+<p>We capture this asymmetry using <strong>Generalized Transfer Entropy</strong>:</p>
+<div class="math notranslate nohighlight">
+\[ \text{TE}_{fwd}^{(k)} = I(X_{t-1}; Y_t \mid Y_{t-k}) \]</div>
+<div class="math notranslate nohighlight">
+\[ \text{TE}_{bwd}^{(k)} = I(Y_{t-1}; X_t \mid X_{t-k}) \]</div>
+<p>TD2C computes these values for various lags <span class="math notranslate nohighlight">\(k\)</span> and feeds them into a classifier. The classifier learns to distinguish the “fingerprint” of a true causal link (<span class="math notranslate nohighlight">\(X \to Y\)</span>) from a spurious one (<span class="math notranslate nohighlight">\(X \leftarrow L \to Y\)</span>).</p>
+</section>
+<section id="visualizing-the-temporal-markov-blanket">
+<h2>Visualizing the Temporal Markov Blanket<a class="headerlink" href="#visualizing-the-temporal-markov-blanket" title="Link to this heading">#</a></h2>
+<p>In the paper, we assume that for a variable <span class="math notranslate nohighlight">\(X_t\)</span>, its information is shielded from the rest of the graph by its immediate temporal neighbors.</p>
+<p>While a true Markov Blanket might include parents of children (spouses) across other variables, our approximation is:
+$<span class="math notranslate nohighlight">\( \mathbf{M}_{X_t} \approx \{ X_{t-1}, X_{t+1} \} \)</span>$</p>
+<p>This greatly simplifies feature extraction. Let’s visualize this specific “Time-Slice” view.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_temporal_blanket</span><span class="p">():</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+    <span class="c1"># Create a simple chain X_t-1 -&gt; X_t -&gt; X_t+1</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X_{t-1}&quot;</span><span class="p">,</span> <span class="s2">&quot;X_t&quot;</span><span class="p">,</span> <span class="s2">&quot;X_{t+1}&quot;</span><span class="p">]</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_path</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+    
+    <span class="c1"># Add some &quot;other&quot; variables to show what we are ignoring</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;Y_{t-1}&quot;</span><span class="p">,</span> <span class="s2">&quot;Y_t&quot;</span><span class="p">)</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;Y_t&quot;</span><span class="p">,</span> <span class="s2">&quot;X_t&quot;</span><span class="p">)</span> <span class="c1"># A cross-sectional parent (often ignored in our approx)</span>
+    
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;X_{t-1}&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;X_t&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;X_{t+1}&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;Y_{t-1}&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Y_t&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    
+    <span class="c1"># Draw all nodes/edges grey first</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    
+    <span class="c1"># Highlight the Target and its assumed Blanket</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X_t&quot;</span><span class="p">],</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#CC4125&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span> <span class="c1"># Target Red</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X_{t-1}&quot;</span><span class="p">,</span> <span class="s2">&quot;X_{t+1}&quot;</span><span class="p">],</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#FC8D62&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span> <span class="c1"># Blanket Orange</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;The TD2C Temporal Markov Blanket Assumption&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plot_temporal_blanket</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="the-td2c-hypothesis">
+<h1>The TD2C Hypothesis<a class="headerlink" href="#the-td2c-hypothesis" title="Link to this heading">#</a></h1>
+<p>In this section, we adapt the static D2C framework to the temporal domain, introducing the <strong>Temporal Dependency to Causality (TD2C)</strong> approach. We posit that time adds a strict constraint to the causal graph that allows for robust feature engineering.</p>
+<section id="assumptions-for-the-dynamic-case">
+<h2>1. Assumptions for the Dynamic Case<a class="headerlink" href="#assumptions-for-the-dynamic-case" title="Link to this heading">#</a></h2>
+<p>To render the problem tractable, we make two specific assumptions for time series data:</p>
+<ol class="arabic simple">
+<li><p><strong>Causal Stationarity:</strong> The causal mechanisms (functions) do not change over the observation window.</p></li>
+<li><p><strong>First-Order Markov Self-Causality:</strong> We assume that every variable is influenced by its own immediate past state:
+$<span class="math notranslate nohighlight">\( \mathbf{z}_{i}^{(t-1)} \to \mathbf{z}_{i}^{(t)} \)</span>$</p></li>
+</ol>
+</section>
+<section id="a-temporally-aware-markov-blanket">
+<h2>2. A Temporally-Aware Markov Blanket<a class="headerlink" href="#a-temporally-aware-markov-blanket" title="Link to this heading">#</a></h2>
+<p>In standard causal discovery, identifying the Markov Blanket is a complex estimation task often prone to errors. However, leveraging the self-causality assumption allows us to define a stable, “minimum” Markov Blanket for any variable <span class="math notranslate nohighlight">\(\mathbf{z}_i^{(t)}\)</span> consisting of its immediate temporal neighbors:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{M}_{\mathbf{z}_i^{(t)}} = \{\mathbf{z}_i^{(t-1)}, \mathbf{z}_i^{(t+1)}\}
+\]</div>
+<p>This definition provides a canonically ordered set of neighbors—a guaranteed <strong>parent</strong> (<span class="math notranslate nohighlight">\(\mathbf{z}_i^{(t-1)}\)</span>) and a guaranteed <strong>child</strong> (<span class="math notranslate nohighlight">\(\mathbf{z}_i^{(t+1)}\)</span>). This allows us to move beyond statistical summaries (quantiles) used in static D2C and engineer highly specific features based on these known relationships.</p>
+</section>
+<section id="the-hypothesis-information-asymmetry">
+<h2>3. The Hypothesis: Information Asymmetry<a class="headerlink" href="#the-hypothesis-information-asymmetry" title="Link to this heading">#</a></h2>
+<p>We hypothesize that a causal link creates a fundamental asymmetry in the flow of information through the temporal graph. Even when simple conditional independence tests fail due to confounding or non-linearity, a <strong>quantitative asymmetry</strong> persists in the number of open information paths.</p>
+<p>Consider the following three scenarios of increasing complexity:</p>
+<ol class="arabic simple">
+<li><p><strong>Scenario 1:</strong> A simple causal chain.</p></li>
+<li><p><strong>Scenario 2:</strong> Added complexity with longer lags.</p></li>
+<li><p><strong>Scenario 3:</strong> The presence of a latent confounder <span class="math notranslate nohighlight">\(\mathbf{L}\)</span>.</p></li>
+</ol>
+<p><img alt="Causal Scenarios" src="../_images/scenarios.png" />
+<em>Figure 2: Three causal scenarios. Even as complexity increases from simple chains (a) to confounded systems (c), the asymmetry in information flow remains detectable.</em></p>
+<section id="path-counting-experiment">
+<h3>Path Counting Experiment<a class="headerlink" href="#path-counting-experiment" title="Link to this heading">#</a></h3>
+<p>To validate this, we analyzed the number of open d-separation paths for a Transfer Entropy-like test (<span class="math notranslate nohighlight">\(I(\mathbf{z}_i^{(t-k)}; \mathbf{z}_j^{(t)} \mid \mathbf{z}_j^{(t-k)})\)</span>) versus its reverse direction. As shown in the table below, the difference (<span class="math notranslate nohighlight">\(\Delta\)</span>) in open paths grows with complexity.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Test Direction</p></th>
+<th class="head text-center"><p>Lag 1</p></th>
+<th class="head text-center"><p>Lag 2</p></th>
+<th class="head text-center"><p>Lag 3</p></th>
+<th class="head text-center"><p>Lag 4</p></th>
+<th class="head text-center"><p>Lag 5</p></th>
+<th class="head text-center"><p>…</p></th>
+<th class="head text-center"><p>Lag 9</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>Scenario 1: Simple</strong></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Forward (<span class="math notranslate nohighlight">\(\rightarrow\)</span>)</p></td>
+<td class="text-center"><p>1</p></td>
+<td class="text-center"><p>2</p></td>
+<td class="text-center"><p>3</p></td>
+<td class="text-center"><p>4</p></td>
+<td class="text-center"><p>5</p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p>9</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Backward (<span class="math notranslate nohighlight">\(\leftarrow\)</span>)</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Difference (<span class="math notranslate nohighlight">\(\Delta\)</span>)</strong></p></td>
+<td class="text-center"><p><strong>1</strong></p></td>
+<td class="text-center"><p><strong>2</strong></p></td>
+<td class="text-center"><p><strong>3</strong></p></td>
+<td class="text-center"><p><strong>4</strong></p></td>
+<td class="text-center"><p><strong>5</strong></p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p><strong>9</strong></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Scenario 2: Complex</strong></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Forward (<span class="math notranslate nohighlight">\(\rightarrow\)</span>)</p></td>
+<td class="text-center"><p>370</p></td>
+<td class="text-center"><p>228</p></td>
+<td class="text-center"><p>324</p></td>
+<td class="text-center"><p>320</p></td>
+<td class="text-center"><p>374</p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p>615</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Backward (<span class="math notranslate nohighlight">\(\leftarrow\)</span>)</p></td>
+<td class="text-center"><p>312</p></td>
+<td class="text-center"><p>153</p></td>
+<td class="text-center"><p>227</p></td>
+<td class="text-center"><p>183</p></td>
+<td class="text-center"><p>194</p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p>71</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Difference (<span class="math notranslate nohighlight">\(\Delta\)</span>)</strong></p></td>
+<td class="text-center"><p><strong>58</strong></p></td>
+<td class="text-center"><p><strong>75</strong></p></td>
+<td class="text-center"><p><strong>97</strong></p></td>
+<td class="text-center"><p><strong>137</strong></p></td>
+<td class="text-center"><p><strong>180</strong></p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p><strong>544</strong></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Scenario 3: Confounded</strong></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Forward (<span class="math notranslate nohighlight">\(\rightarrow\)</span>)</p></td>
+<td class="text-center"><p>1186</p></td>
+<td class="text-center"><p>880</p></td>
+<td class="text-center"><p>1138</p></td>
+<td class="text-center"><p>1123</p></td>
+<td class="text-center"><p>1187</p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p>1271</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Backward (<span class="math notranslate nohighlight">\(\leftarrow\)</span>)</p></td>
+<td class="text-center"><p>898</p></td>
+<td class="text-center"><p>502</p></td>
+<td class="text-center"><p>701</p></td>
+<td class="text-center"><p>580</p></td>
+<td class="text-center"><p>596</p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p>290</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Difference (<span class="math notranslate nohighlight">\(\Delta\)</span>)</strong></p></td>
+<td class="text-center"><p><strong>288</strong></p></td>
+<td class="text-center"><p><strong>378</strong></p></td>
+<td class="text-center"><p><strong>437</strong></p></td>
+<td class="text-center"><p><strong>543</strong></p></td>
+<td class="text-center"><p><strong>591</strong></p></td>
+<td class="text-center"><p>…</p></td>
+<td class="text-center"><p><strong>981</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><em>Table 1: Number of open information paths. The quantitative asymmetry (<span class="math notranslate nohighlight">\(\Delta\)</span>) serves as a learnable signature for the classifier.</em></p>
+</section>
+</section>
+<section id="mutual-information-estimation">
+<h2>4. Mutual Information Estimation<a class="headerlink" href="#mutual-information-estimation" title="Link to this heading">#</a></h2>
+<p>To capture the non-linear dependencies implied in these scenarios, we cannot rely on linear correlation. We employ the <strong>KSG (Kraskov-Stögbauer-Grassberger)</strong> estimator, a non-parametric k-nearest neighbor method.</p>
+<p>For conditional MI, we use the identity:
+$<span class="math notranslate nohighlight">\(
+I(\mathbf{z}_i; \mathbf{z}_j \mid \mathbf{z}_k) = I((\mathbf{z}_i, \mathbf{z}_k); \mathbf{z}_j) - I(\mathbf{z}_k; \mathbf{z}_j)
+\)</span>$</p>
+<p>This ensures we capture complex, non-Gaussian interactions inherent in the definition of the descriptors.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./02_theory"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nb_background.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Background: Causal Discovery and The Information Theoretic Approach</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../03_pipeline/nb_data_generation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Synthetic Data Generation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">The TD2C Hypothesis: Information Asymmetry</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-three-scenarios">The Three Scenarios</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scenario-1-simple-chain">Scenario 1: Simple Chain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scenario-2-feedback-and-self-loops">Scenario 2: Feedback and Self-Loops</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scenario-3-latent-confounders">Scenario 3: Latent Confounders</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operationalizing-the-hypothesis">Operationalizing the Hypothesis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-temporal-markov-blanket">Visualizing the Temporal Markov Blanket</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#the-td2c-hypothesis">The TD2C Hypothesis</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-for-the-dynamic-case">1. Assumptions for the Dynamic Case</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-temporally-aware-markov-blanket">2. A Temporally-Aware Markov Blanket</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-hypothesis-information-asymmetry">3. The Hypothesis: Information Asymmetry</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#path-counting-experiment">Path Counting Experiment</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutual-information-estimation">4. Mutual Information Estimation</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gian Marco Paldino & Gianluca Bontempi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

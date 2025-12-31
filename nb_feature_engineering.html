@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Feature Engineering: Operationalizing Causality &#8212; TD2C: Temporal Dependency to Causality</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nb_feature_engineering';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Supervised Model: From Descriptors to Probabilities" href="nb_supervised_model.html" />
+    <link rel="prev" title="Synthetic Data Generation" href="nb_data_generation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="md_index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="TD2C: Temporal Dependency to Causality - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="TD2C: Temporal Dependency to Causality - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="md_index.html">
+                    Causal Discovery in Multivariate Time Series
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_installation.html">Installation &amp; Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nb_quick_usage.html">Quick Usage: The “Hello World” of Causality</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Theoretical Foundations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_background.html">Background: Causal Discovery and The Information Theoretic Approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nb_hypothesis.html">The TD2C Hypothesis: Information Asymmetry</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Pipeline</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_data_generation.html">Synthetic Data Generation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Feature Engineering: Operationalizing Causality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nb_supervised_model.html">The Supervised Model: From Descriptors to Probabilities</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Benchmarking</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_setup.html">Benchmarking Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nb_results_synthetic.html">Results: Generalization to Unseen Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nb_results_realworld.html">Results: Zero-Shot Real-World Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nb_computational_cost.html">Computational Scalability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Application</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_inference_user_data.html">Inference on Your Own Data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_descriptors_list.html">Appendix A: List of Causal Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nb_references.html">Appendix A: List of Causal Descriptors</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nb_feature_engineering.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Feature Engineering: Operationalizing Causality</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-transfer-entropy">1. Generalized Transfer Entropy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-based-descriptors">2. Error-Based Descriptors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#higher-order-moments">3. Higher-Order Moments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-descriptor-set">4. The Complete Descriptor Set</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#information-flow-transfer-entropy">Information Flow &amp; Transfer Entropy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-error-based">Statistical &amp; Error-Based</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-blanket-interactions-information-theoretic">Markov Blanket Interactions (Information Theoretic)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-descriptor-generalized-transfer-entropy">Key Descriptor: Generalized Transfer Entropy</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="feature-engineering-operationalizing-causality">
+<h1>Feature Engineering: Operationalizing Causality<a class="headerlink" href="#feature-engineering-operationalizing-causality" title="Link to this heading">#</a></h1>
+<p>In this notebook, we detail the construction of the feature vector used by TD2C. The model synthesizes evidence from four domains: Information Theory, Error Analysis, Higher-Order Statistics, and Linear models.</p>
+<section id="generalized-transfer-entropy">
+<h2>1. Generalized Transfer Entropy<a class="headerlink" href="#generalized-transfer-entropy" title="Link to this heading">#</a></h2>
+<p>Motivated by the path asymmetry hypothesis, we define a set of descriptors based on a generalized form of Transfer Entropy (TE). We evaluate how information from the cause’s immediate past (<span class="math notranslate nohighlight">\(\mathbf{z}_i^{(t-1)}\)</span>) transfers to the effect (<span class="math notranslate nohighlight">\(\mathbf{z}_j^{(t)}\)</span>) while varying the conditioning history of the effect (<span class="math notranslate nohighlight">\(k\)</span>).</p>
+<p>For each lag <span class="math notranslate nohighlight">\(k \in [k_{min}, k_{max}]\)</span>, we compute:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{TE}_{\text{fwd}}^{(k)} = I(\mathbf{z}_i^{(t-1)}; \mathbf{z}_j^{(t)} \mid \mathbf{z}_j^{(t-k)})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\text{TE}_{\text{bwd}}^{(k)} = I(\mathbf{z}_j^{(t-1)}; \mathbf{z}_i^{(t)} \mid \mathbf{z}_i^{(t-k)})
+\]</div>
+<p>The primary <strong>asymmetry feature</strong> averages this bias across all lags:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{TE}_{\text{asy}} = \mathbb{E}_{k \in [k_{min}, k_{max}]}\left[\text{TE}_{\text{fwd}}^{(k)} - \text{TE}_{\text{bwd}}^{(k)}\right]
+\]</div>
+</section>
+<section id="error-based-descriptors">
+<h2>2. Error-Based Descriptors<a class="headerlink" href="#error-based-descriptors" title="Link to this heading">#</a></h2>
+<p>Inspired by Additive Noise Models (ANMs), these features look for structure in the residuals.</p>
+<ol class="arabic simple">
+<li><p><strong>Partial Correlation:</strong> Isolates the direct linear association by removing the effect of temporal neighbors <span class="math notranslate nohighlight">\(\mathbf{S}_{ij}^{(t)} = \mathbf{M}_i^{(t)} \cup \mathbf{M}_j^{(t)}\)</span>.
+$<span class="math notranslate nohighlight">\( \rho_{\text{partial}} = \text{Corr}(\mathbf{z}_i^{(t)} - f_i(\mathbf{S}_{ij}^{(t)}), \mathbf{z}_j^{(t)} - f_j(\mathbf{S}_{ij}^{(t)})) \)</span>$</p></li>
+<li><p><strong>Residual-Input Correlation:</strong> Tests if the cause contains information present in the effect’s residual (a signature of correct causal direction in ANMs).
+$<span class="math notranslate nohighlight">\( \rho_{\text{resid}} = \text{Corr}(\mathbf{z}_j^{(t)} - f_{\text{Ridge}}(\mathbf{z}_i^{(t)}, \mathbf{M}_i^{(t)}), \mathbf{z}_i^{(t)}) \)</span>$</p></li>
+</ol>
+</section>
+<section id="higher-order-moments">
+<h2>3. Higher-Order Moments<a class="headerlink" href="#higher-order-moments" title="Link to this heading">#</a></h2>
+<p>To capture non-Gaussianity, we compute cross-cumulants between standardized variables:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{HOC}_{i,j} = \mathbb{E}\left[\left(\frac{\mathbf{z}_i^{(t)} - \mu_i}{\sigma_i}\right)^i \left(\frac{\mathbf{z}_j^{(t)} - \mu_j}{\sigma_j}\right)^j\right]
+\]</div>
+<p>Specific features include <span class="math notranslate nohighlight">\(\text{HOC}_{3,1}\)</span>, <span class="math notranslate nohighlight">\(\text{HOC}_{1,2}\)</span>, Skewness, and Kurtosis.</p>
+</section>
+<section id="the-complete-descriptor-set">
+<h2>4. The Complete Descriptor Set<a class="headerlink" href="#the-complete-descriptor-set" title="Link to this heading">#</a></h2>
+<p>The final feature vector is a combination of the novel descriptors above and legacy D2C descriptors tailored for time series. Below is the full mathematical definition of the feature space.</p>
+<section id="information-flow-transfer-entropy">
+<h3>Information Flow &amp; Transfer Entropy<a class="headerlink" href="#information-flow-transfer-entropy" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Feature Name</p></th>
+<th class="head text-left"><p>Mathematical Formulation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>TE Asymmetry</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\mathbb{E}_{k}\left[I(\mathbf{z}_i^{(t-1)}; \mathbf{z}_j^{(t)} \mid \mathbf{z}_j^{(t-k)}) - I(\mathbf{z}_j^{(t-1)}; \mathbf{z}_i^{(t)} \mid \mathbf{z}_i^{(t-k)})\right]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>TE Forward (Lag 1)</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(I(\mathbf{z}_i^{(t-1)}; \mathbf{z}_j^{(t)} \mid \mathbf{z}_j^{(t-1)})\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>TE Backward (Lag 1)</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(I(\mathbf{z}_j^{(t-1)}; \mathbf{z}_i^{(t)} \mid \mathbf{z}_i^{(t-1)})\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>TE Difference</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\text{TE}_{\text{fwd}}^{(1)} - \text{TE}_{\text{bwd}}^{(1)}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="statistical-error-based">
+<h3>Statistical &amp; Error-Based<a class="headerlink" href="#statistical-error-based" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Feature Name</p></th>
+<th class="head text-left"><p>Mathematical Formulation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Partial Correlation</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\operatorname{Corr}(\mathbf{z}_i - \operatorname{proj}_{\mathbf{MB}_i}(\mathbf{z}_i), \mathbf{z}_j - \operatorname{proj}_{\mathbf{MB}_j}(\mathbf{z}_j))\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Error-Input Corr</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\operatorname{Corr}(\mathbf{z}_j - \operatorname{proj}_{\mathbf{MB}_i}(\mathbf{z}_j), \mathbf{z}_i)\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Linear Coeff (fwd)</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(b\)</span> from <span class="math notranslate nohighlight">\(\mathbf{z}_j = b \cdot \mathbf{z}_i + \sum \mathbf{m}_j \cdot \beta + \epsilon\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Linear Coeff (bwd)</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(b\)</span> from <span class="math notranslate nohighlight">\(\mathbf{z}_i = b \cdot \mathbf{z}_j + \sum \mathbf{m}_i \cdot \beta + \epsilon\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Cross-Moments</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\text{HOC}_{3,1}, \text{HOC}_{1,2}, \text{HOC}_{2,1}, \text{HOC}_{1,3}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Higher Order Stats</p></td>
+<td class="text-left"><p>Kurtosis(<span class="math notranslate nohighlight">\(\mathbf{z}_i\)</span>), Kurtosis(<span class="math notranslate nohighlight">\(\mathbf{z}_j\)</span>), Skewness(<span class="math notranslate nohighlight">\(\mathbf{z}_i\)</span>), Skewness(<span class="math notranslate nohighlight">\(\mathbf{z}_j\)</span>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="markov-blanket-interactions-information-theoretic">
+<h3>Markov Blanket Interactions (Information Theoretic)<a class="headerlink" href="#markov-blanket-interactions-information-theoretic" title="Link to this heading">#</a></h3>
+<p><em>Note: <span class="math notranslate nohighlight">\(\mathbf{m}_i\)</span> refers to members of the Markov Blanket of <span class="math notranslate nohighlight">\(i\)</span>.</em></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Feature Concept</p></th>
+<th class="head text-left"><p>Formula</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>Direct Interaction</strong></p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(I(\mathbf{z}_i; \mathbf{z}_j)\)</span>, <span class="math notranslate nohighlight">\(I(\mathbf{z}_i; \mathbf{z}_j \mid \mathbf{MB}_i \cap \mathbf{MB}_j)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Conditioned on MB</strong></p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(I(\mathbf{z}_j; \mathbf{z}_i \mid \mathbf{MB}_j)\)</span>, <span class="math notranslate nohighlight">\(I(\mathbf{z}_i; \mathbf{z}_j \mid \mathbf{MB}_i)\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Cause’s MB stats</strong></p></td>
+<td class="text-left"><p>Mean/Std of <span class="math notranslate nohighlight">\(\{I(\mathbf{z}_i; \mathbf{m}_j) \mid \mathbf{m}_j \in \mathbf{MB}_j\}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Effect’s MB stats</strong></p></td>
+<td class="text-left"><p>Mean/Std of <span class="math notranslate nohighlight">\(\{I(\mathbf{z}_j; \mathbf{m}_i) \mid \mathbf{m}_i \in \mathbf{MB}_i\}\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Interaction 3-way</strong></p></td>
+<td class="text-left"><p>Mean/Std of <span class="math notranslate nohighlight">\(\{I(\mathbf{m}_i; \mathbf{m}_j \mid \mathbf{z}_j)\}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Temporal Parents/Children</strong></p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(I(\mathbf{z}_i^{(t-1)}; \mathbf{z}_j^{(t)} \mid \mathbf{z}_j^{(t-1)})\)</span>, <span class="math notranslate nohighlight">\(I(\mathbf{z}_i^{(t-1)}; \mathbf{z}_j^{(t+1)} \mid \mathbf{z}_j^{(t)})\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s inspect the features generated for a single pair of variables</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">td2c.descriptors</span><span class="w"> </span><span class="kn">import</span> <span class="n">D2C</span>
+
+<span class="c1"># Re-using the engine from the Quick Start</span>
+<span class="c1"># We look at the descriptors dataframe we generated earlier</span>
+<span class="n">feature_df</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Show Information Theoretic features</span>
+<span class="n">mi_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">feature_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;entropy&quot;</span> <span class="ow">in</span> <span class="n">c</span> <span class="ow">or</span> <span class="s2">&quot;mean&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Subset of Information Theoretic Descriptors:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">feature_df</span><span class="p">[</span><span class="n">mi_cols</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># Show Error-based features</span>
+<span class="n">err_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">feature_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;resid&quot;</span> <span class="ow">in</span> <span class="n">c</span> <span class="ow">or</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Subset of Error-based Descriptors:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">feature_df</span><span class="p">[</span><span class="n">err_cols</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="key-descriptor-generalized-transfer-entropy">
+<h3>Key Descriptor: Generalized Transfer Entropy<a class="headerlink" href="#key-descriptor-generalized-transfer-entropy" title="Link to this heading">#</a></h3>
+<p>One of our strongest features is the asymmetry in Transfer Entropy at various lags:</p>
+<div class="math notranslate nohighlight">
+\[ \Delta TE = I(X_{t-1} ; Y_t | Y_{t-k}) - I(Y_{t-1} ; X_t | X_{t-k}) \]</div>
+<p>If <span class="math notranslate nohighlight">\(X \to Y\)</span>, this value tends to be positive. If there is no link, it is near zero. If <span class="math notranslate nohighlight">\(Y \to X\)</span>, it is negative.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nb_data_generation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Synthetic Data Generation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="nb_supervised_model.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">The Supervised Model: From Descriptors to Probabilities</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-transfer-entropy">1. Generalized Transfer Entropy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-based-descriptors">2. Error-Based Descriptors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#higher-order-moments">3. Higher-Order Moments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-descriptor-set">4. The Complete Descriptor Set</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#information-flow-transfer-entropy">Information Flow &amp; Transfer Entropy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-error-based">Statistical &amp; Error-Based</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-blanket-interactions-information-theoretic">Markov Blanket Interactions (Information Theoretic)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-descriptor-generalized-transfer-entropy">Key Descriptor: Generalized Transfer Entropy</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gian Marco Paldino & Gianluca Bontempi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
