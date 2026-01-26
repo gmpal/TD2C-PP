@@ -6,7 +6,7 @@ sys.path.append("../../")
 
 # %%
 from src.td2c.data_generation.builder import TSBuilder
-from src import config
+from src.td2c import config
 
 # %%
 for error in ["gaussian", "uniform", "laplace"]:
