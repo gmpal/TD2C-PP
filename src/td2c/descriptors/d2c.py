@@ -349,6 +349,15 @@ class D2C:
                 all_involved_nodes.add(node_b)
             nodes_to_compute_mb_for = list(all_involved_nodes)
 
+        else:
+            # If we are considering ALL links (num_samples == -1), 
+            # we need the MB for every node involved in any possible link.
+            for node_a, node_b in all_possible_links:
+                all_involved_nodes.add(node_a)
+                all_involved_nodes.add(node_b)
+            
+            nodes_to_compute_mb_for = list(all_involved_nodes)
+        
         # 2. Pre-compute Markov Blankets for only the necessary nodes
         # This avoids computing MBs for nodes that aren't part of any sampled couple.
         precomputed_markov_blankets = {}
