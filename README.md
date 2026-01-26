@@ -120,14 +120,6 @@ Once downloaded, unzip the file and place the resulting `data` folder in the roo
 ```bash
 python3 -m zipfile -e data.zip .
 ```
-```bash
-# After downloading data.zip to the repository root...
-unzip data.zip
-
-# Verify the structure: the 'data' folder should now be in your current directory
-ls
-# Expected output includes: data/  reproduce/  src/  results/  README.md ...
-```
 
 Your environment is now ready.
 
