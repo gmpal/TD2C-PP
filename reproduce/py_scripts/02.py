@@ -15,7 +15,7 @@ def compute_descriptors(data_type, input_prefix, output_file, n_vars, maxlags, n
         
         for error_dist in ["gaussian", "uniform", "laplace"]:
             dl = DataLoader(n_variables=n_vars, maxlags=maxlags)
-            dl.from_pickle(f"../../data/{input_prefix}_{error_dist}.pkl")
+            dl.from_pickle(f"../../data/observations/{input_prefix}_{error_dist}.pkl")
             dataloaders[error_dist] = dl
             lagged_observations[error_dist] = dl.get_observations()
             flattened_dags[error_dist] = dl.get_dags()
@@ -32,7 +32,7 @@ def compute_descriptors(data_type, input_prefix, output_file, n_vars, maxlags, n
     else:
         # Standard single file loading
         dl = DataLoader(n_variables=n_vars, maxlags=maxlags)
-        dl.from_pickle(f"realdata/{input_prefix}.pkl" if "realdata" in input_prefix else input_prefix)
+        dl.from_pickle(f"realistic/{input_prefix}.pkl")
         final_obs = dl.get_observations()
         final_dags = dl.get_dags()
 
