@@ -1,4 +1,4 @@
-from td2c.benchmark.base import BaseCausalInference
+from src.td2c.benchmark.base import BaseCausalInference
 
 from causalnex.structure.dynotears import from_pandas_dynamic
 

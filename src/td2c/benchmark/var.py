@@ -2,7 +2,7 @@ import pandas as pd
 import pickle
 import statsmodels.tsa.api as tsa
 
-from td2c.benchmark.base import BaseCausalInference
+from src.td2c.benchmark.base import BaseCausalInference
 
 
 class VAR(BaseCausalInference):

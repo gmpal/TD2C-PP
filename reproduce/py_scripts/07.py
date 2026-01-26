@@ -32,7 +32,7 @@ from sklearn.metrics import (
 # =============================================================================
 # 1. SETUP AND CONFIGURATION
 # =============================================================================
-from td2c.benchmark.utils import draw_cd_diagram
+from src.td2c.benchmark.utils import draw_cd_diagram
 
 THRESHOLD = 0.309
 

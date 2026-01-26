@@ -1,4 +1,4 @@
-from td2c.benchmark.base import BaseCausalInference
+from src.td2c.benchmark.base import BaseCausalInference
 import pandas as pd
 import pickle
 from lingam import VARLiNGAM as VARLiNGAM_

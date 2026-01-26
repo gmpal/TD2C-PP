@@ -4,7 +4,7 @@ import numpy as np
 from scipy.stats import kurtosis, skew
 from tqdm.auto import tqdm
 
-from td2c.descriptors.utils import (
+from src.td2c.descriptors.utils import (
     coeff,
     HOC,
     compute_partial_correlation_using_residuals,
@@ -13,7 +13,7 @@ from td2c.descriptors.utils import (
     var_lag_to_node,
 )
 
-from td2c.descriptors.estimators import MarkovBlanketEstimator, OptimizedMIEstimator
+from src.td2c.descriptors.estimators import MarkovBlanketEstimator, OptimizedMIEstimator
 
 
 def _d2c_worker_with_dag(args):

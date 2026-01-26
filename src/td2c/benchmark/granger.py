@@ -1,4 +1,4 @@
-from td2c.benchmark.base import BaseCausalInference
+from src.td2c.benchmark.base import BaseCausalInference
 
 from statsmodels.tsa.stattools import grangercausalitytests
 import numpy as np

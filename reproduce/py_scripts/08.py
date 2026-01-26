@@ -5,9 +5,9 @@ import time
 import pandas as pd
 from imblearn.ensemble import BalancedRandomForestClassifier
 sys.path.append("../../")
-from td2c.data_generation.builder import TSBuilder
-from td2c.descriptors import DataLoader
-from td2c.benchmark import VAR, VARLiNGAM, PCMCI, Granger, DYNOTEARS, MultivariateGranger, D2CWrapper
+from src.td2c.data_generation.builder import TSBuilder
+from src.td2c.descriptors import DataLoader
+from src.td2c.benchmark import VAR, VARLiNGAM, PCMCI, Granger, DYNOTEARS, MultivariateGranger, D2CWrapper
 
 # Set env vars to 1 thread for fair comparison before importing libraries that use MKL
 os.environ["MKL_NUM_THREADS"] = "1"

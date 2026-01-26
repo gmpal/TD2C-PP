@@ -17,11 +17,11 @@ sys.path.append("../../")
 sys.path.append("../src")
 
 # Imports from td2c
-from td2c.descriptors import DataLoader
-from td2c.benchmark import (
+from src.td2c.descriptors import DataLoader
+from src.td2c.benchmark import (
     VARLiNGAM, PCMCI, Granger, DYNOTEARS, D2CWrapper, VAR, MultivariateGranger
 )
-from td2c.benchmark.utils import prepare_prediction_df_d2c
+from src.td2c.benchmark.utils import prepare_prediction_df_d2c
 import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 

@@ -1,7 +1,7 @@
 import sys
 import argparse
 sys.path.append("../../")
-from td2c.descriptors import D2C, DataLoader
+from src.td2c.descriptors import D2C, DataLoader
 
 def compute_descriptors(data_type, input_prefix, output_file, n_vars, maxlags, n_jobs):
     print(f"--- Computing {data_type} descriptors ({output_file}) ---")

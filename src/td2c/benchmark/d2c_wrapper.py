@@ -1,7 +1,7 @@
 import pandas as pd
-from td2c.benchmark.base import BaseCausalInference
-from td2c.descriptors.loader import DataLoader
-from td2c.descriptors.d2c import D2C as D2C_
+from src.td2c.benchmark.base import BaseCausalInference
+from src.td2c.descriptors.loader import DataLoader
+from src.td2c.descriptors.d2c import D2C as D2C_
 from sklearn.impute import SimpleImputer
 import numpy as np
 import os  # Import the os module to check for file existence

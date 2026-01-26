@@ -5,7 +5,7 @@ import sys
 sys.path.append("../../")
 
 # %%
-from td2c.data_generation.builder import TSBuilder
+from src.td2c.data_generation.builder import TSBuilder
 from src import config
 
 # %%
@@ -64,7 +64,7 @@ tsbuilder.get_generated_observations()
 
 # %%
 # we can check one of the generated dags
-from td2c.data_generation.utils import show_DAG
+from src.td2c.data_generation.utils import show_DAG
 
 dag = tsbuilder.get_generated_dags()[1][2]
 show_DAG(dag, config.N_VARS, config.MAXLAGS)

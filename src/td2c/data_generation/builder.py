@@ -5,7 +5,7 @@ This module is responsible for generating time series data based on the specifie
 import pickle
 import numpy as np
 import networkx as nx
-from td2c.data_generation.models import model_registry
+from src.td2c.data_generation.models import model_registry
 
 
 class TSBuilder:
