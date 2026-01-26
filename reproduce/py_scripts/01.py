@@ -2,7 +2,7 @@
 # avoids the need for users to install TD2C as a package
 import sys
 
-sys.path.append("./")
+sys.path.append("../../")
 
 # %%
 from src.data_generation.builder import TSBuilder
@@ -64,7 +64,7 @@ tsbuilder.get_generated_observations()
 
 # %%
 # we can check one of the generated dags
-from d2c.data_generation.utils import show_DAG
+from td2c.data_generation.utils import show_DAG
 
 dag = tsbuilder.get_generated_dags()[1][2]
 show_DAG(dag, config.N_VARS, config.MAXLAGS)

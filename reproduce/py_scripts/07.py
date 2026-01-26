@@ -2,7 +2,7 @@
 # avoids the need for users to install TD2C as a package
 import sys
 
-sys.path.append("../..")
+sys.path.append("../../")
 
 # %%
 import pickle
@@ -32,7 +32,7 @@ from sklearn.metrics import (
 # =============================================================================
 # 1. SETUP AND CONFIGURATION
 # =============================================================================
-from d2c.benchmark.utils import draw_cd_diagram
+from td2c.benchmark.utils import draw_cd_diagram
 
 THRESHOLD = 0.309
 

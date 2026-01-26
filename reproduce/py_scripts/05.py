@@ -2,7 +2,7 @@
 # avoids the need for users to install TD2C as a package
 import sys
 
-sys.path.append("./")
+sys.path.append("../../")
 
 # %%
 import pickle
