@@ -15,7 +15,7 @@ def compute_descriptors(data_type, input_prefix, output_file, n_vars, maxlags, n
         
         for error_dist in ["gaussian", "uniform", "laplace"]:
             dl = DataLoader(n_variables=n_vars, maxlags=maxlags)
-            dl.from_pickle(f"data/{input_prefix}_{error_dist}.pkl")
+            dl.from_pickle(f"../../data/{input_prefix}_{error_dist}.pkl")
             dataloaders[error_dist] = dl
             lagged_observations[error_dist] = dl.get_observations()
             flattened_dags[error_dist] = dl.get_dags()
@@ -50,7 +50,7 @@ def compute_descriptors(data_type, input_prefix, output_file, n_vars, maxlags, n
         mb_estimator="ts",
     )
     d2c.initialize()
-    d2c.get_descriptors_df().to_pickle(f"data/descriptors/{output_file}")
+    d2c.get_descriptors_df().to_pickle(f"../../data/descriptors/{output_file}")
     print(f"Saved to data/descriptors/{output_file}")
 
 

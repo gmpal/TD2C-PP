@@ -33,7 +33,7 @@ def _load_testing_data():
 
     for error_dist in ["gaussian", "uniform", "laplace"]:
         dataloader = DataLoader(n_variables=5, maxlags=3)
-        dataloader.from_pickle(f"data/observations/testing_data_{error_dist}.pkl")
+        dataloader.from_pickle(f"../../data/observations/testing_data_{error_dist}.pkl")
         dataloaders[error_dist] = dataloader
         original_observations_testing[error_dist] = dataloader.get_original_observations()
         true_causal_dfs[error_dist] = dataloader.get_true_causal_dfs()
