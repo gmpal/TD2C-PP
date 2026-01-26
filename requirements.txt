@@ -4,7 +4,7 @@ pandas==1.5.3
 scipy==1.10.1
 
 # Machine Learning
-scikit-learn==1.3.2
+scikit-learn
 
 # Statistics and Time Series
 statsmodels==0.14.1
@@ -23,19 +23,16 @@ tqdm==4.66.5
 cachetools==5.5.0
 
 # Time series causality methods
-tigramite==5.2.5.8
+tigramite
 
 # LiNGAM methods
-lingam==1.9.0
+lingam
 
 # CausalNex (for DYNOTEARS)
-causalnex==0.12.1
+causalnex
 
 # Copula estimation
 pyvinecopulib==0.7.1
-
-# Mutual information estimation
-knncmi==0.0.1
 
 # Performance optimization
 numba==0.58.1

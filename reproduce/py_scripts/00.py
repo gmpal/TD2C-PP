@@ -5,7 +5,7 @@ import sys
 sys.path.append("../../")
 
 # %%
-from src.dags.utils import run_long_range_analysis
+from td2c.dags.utils import run_long_range_analysis
 
 # %%
 # Scenario 1: Simple Case (Z_i -> Z_j)

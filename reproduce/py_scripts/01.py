@@ -5,7 +5,7 @@ import sys
 sys.path.append("../../")
 
 # %%
-from src.data_generation.builder import TSBuilder
+from td2c.data_generation.builder import TSBuilder
 from src import config
 
 # %%
