@@ -127,6 +127,104 @@ Your environment is now ready.
 
 ---
 
+Here is a clean, professional `README.md` file designed for your project. It explains how to use the pipeline to reproduce the paper's results and details what every step does.
+
+***
+
+# TD2C Benchmark Reproduction Pipeline
+
+This repository contains the code and scripts necessary to reproduce the experimental results, tables, and figures presented in the paper regarding the **TD2C (Time-Dependent Causal Discovery)** method.
+
+The pipeline compares TD2C against state-of-the-art methods (VAR, VARLiNGAM, PCMCI, DYNOTEARS, etc.) on both synthetic datasets and realistic benchmarks (Dream3, Netsim).
+
+## 📋 Prerequisites
+
+### Environment Setup
+Ensure you have the required dependencies installed. It is recommended to use a virtual environment (Conda or venv).
+
+```bash
+pip install numpy pandas scikit-learn imbalanced-learn matplotlib seaborn networkx
+# plus the custom td2c package (ensure it is in your PYTHONPATH or installed)
+```
+
+**Note:** The scripts assume they are running from within the `experiments/` folder (or wherever you placed these files) and that the project root containing the `src/` directory is two levels up (`../../`).
+
+### Hardware Requirements
+These benchmarks are computationally intensive.
+*   **Recommended:** A multi-core server (32+ cores) and at least 64GB RAM.
+*   **Minimum:** A standard laptop can run the pipeline, but you **must** reduce the `--n_jobs` argument (e.g., to 4 or 8) and expect significantly longer runtimes.
+
+---
+
+## Reproducing the paper results 
+To run the entire reproduction pipeline—from data generation to final plot creation—use the master `pipeline.py` script. This script handles memory management by executing each step as a subprocess.
+
+```bash
+cd reproduce/py_scripts
+```
+
+
+**Run with high parallelism (Server):**
+```bash
+python pipeline.py --n_jobs 50
+```
+
+**Run with low parallelism (Laptop):**
+```bash
+python pipeline.py --n_jobs 4
+```
+
+### Resume or Skip Steps
+If you have already generated data or computed descriptors, you can skip those heavy steps to save time:
+
+```bash
+# Skip data generation and descriptor computation, start directly at threshold finding and benchmarking
+python pipeline.py --n_jobs 50 --skip_data --skip_descriptors
+```
+
+---
+
+## 📂 Pipeline Stages Description
+
+The `pipeline.py` script orchestrates the execution of the following numbered scripts in order. You can also run them individually if needed.
+
+| Script | Description | Output |
+| :--- | :--- | :--- |
+| **00.py** | **Simple Demo**<br>A minimal example showing TD2C usage on toy data. Not part of the main benchmark pipeline. | Console output |
+| **01.py** | **Data Generation**<br>Generates synthetic time series data with Gaussian, Uniform, and Laplace noise distributions. | `data/observations/` |
+| **02.py** | **Descriptor Computation**<br>*(Computationally Heavy)* Computes information-theoretic descriptors for all pairs of variables in Training, Testing, and Real-world datasets. | `data/descriptors/` |
+| **03.py** | **Threshold Finding**<br>Uses Leave-One-Process-Out Cross-Validation to determine the optimal probability threshold for the classifier (maximizing F1-score). | Console output (Optimal Threshold) |
+| **04.py** | **Main Benchmark**<br>*(Long Runtime)* Runs TD2C and all competitor algorithms (VAR, PCMCI, etc.) on all datasets. | `data/causal_dfs/` |
+| **05.py** | **Test Set Analysis**<br>Calculates metrics (Precision, Recall, F1) specifically for the synthetic test data split by error type and process. | `TEST_analysis/` (Tables/Figures) |
+| **06.py** | **Real Data Analysis**<br>Calculates aggregated metrics for the real-world datasets (Dream3, Netsim). | `REAL_analysis/` |
+| **07.py** | **Critical Difference Plots**<br>Generates CD diagrams to statistically compare the performance of algorithms. | `CD_PLOTS/` |
+| **08.py** | **Scalability Benchmark**<br>*(Optional)* Benchmarks the execution time of algorithms as the number of variables increases. | `data/benchmark_times.csv` |
+| **09.py** | **Feature Importance**<br>Trains a model to analyze which descriptors are most important for causal inference across different datasets. | Console output & CSV |
+
+---
+
+## 📊 Results Output
+
+After the pipeline completes, results are organized into specific directories:
+
+*   **`data/causal_dfs/`**: Raw pickle files containing the inferred causal graphs for every method and dataset.
+*   **`REAL_analysis/figures/`**: Summary boxplots comparing all methods across datasets.
+*   **`TEST_analysis/figures/`**: Detailed breakdown of performance on synthetic data (by error type and process).
+*   **`CD_PLOTS/`**: Statistical significance diagrams (Nemenyi/Wilcoxon tests).
+*   **`POSTER_analysis/`**: High-resolution figures formatted for poster presentations.
+
+## ⚠️ Troubleshooting
+
+1.  **Memory Errors:**
+    *   If the script crashes during Step 02 or 04, reduce `--n_jobs`.
+    *   Ensure `pipeline.py` is used, as it clears Python's memory between steps.
+
+2.  **Missing Data:**
+    *   If Step 04 fails immediately, ensure Step 01 and 02 completed successfully. Check the `data/` folder for `.pkl` files.
+
+3.  **Path Issues:**
+    *   The scripts rely on `sys.path.append("../../")`. Ensure you preserve the folder structure where `src` is two levels above these scripts.
+
 ## Reproducing the Paper's Results
 The `reproduce/py_scripts/` directory contains numbered Python scripts that execute the entire experimental pipeline. We recommend running them in order.
 
