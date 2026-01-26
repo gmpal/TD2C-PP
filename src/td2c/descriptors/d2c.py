@@ -331,7 +331,7 @@ class D2C:
         non_causal_links = list(all_possible_links - set(causal_links))
 
         all_involved_nodes = set()
-
+        print(num_samples)
         if num_samples != -1:
             # Sample the links first to know which nodes we need
             subset_causal_links = np.random.permutation(causal_links)[
@@ -349,7 +349,7 @@ class D2C:
                 all_involved_nodes.add(node_a)
                 all_involved_nodes.add(node_b)
             nodes_to_compute_mb_for = list(all_involved_nodes)
-
+            print(f"Nodes to compute MB for: {nodes_to_compute_mb_for}")
         # 2. Pre-compute Markov Blankets for only the necessary nodes
         # This avoids computing MBs for nodes that aren't part of any sampled couple.
         precomputed_markov_blankets = {}
