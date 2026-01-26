@@ -124,7 +124,7 @@ def is_single_path_open(G, path, conditioning_set):
     # If the nodes are d-separated by the conditioning set in this 
     # path-specific subgraph, then this path is blocked
     try:
-        is_separated = nx.is_d_separator(
+        is_separated = nx.d_separated(
             path_graph, 
             {source}, 
             {target}, 
