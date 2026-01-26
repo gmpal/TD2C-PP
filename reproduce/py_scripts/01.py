@@ -57,14 +57,3 @@ for error in ["gaussian", "uniform", "laplace"]:
     tsbuilder.build()
 
     tsbuilder.to_pickle(f"{config.OBSERVATION_PATH}testing_data_{error}.pkl")
-
-# %%
-# we can check one of the generated time series
-tsbuilder.get_generated_observations()
-
-# %%
-# we can check one of the generated dags
-from src.td2c.data_generation.utils import show_DAG
-
-dag = tsbuilder.get_generated_dags()[1][2]
-show_DAG(dag, config.N_VARS, config.MAXLAGS)
