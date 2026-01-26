@@ -71,18 +71,55 @@ This repository is organized to separate core source code (`src/`), reproduction
 
 ## Installation and Setup
 
-### 1. Clone the Repository
+
+### 0. Set Up the Conda Environment
+We strongly recommend using `conda` to manage dependencies.
+
+```bash
+# Create a new conda environment with Python 3.8
+conda create -n td2c python=3.8 -y
+
+# Activate the environment
+conda activate td2c
+```
+
+### 1. knncmi
+First, we install the knncmi package. 
+
+```bash
+git clone https://github.com/omesner/knncmi.git
+
+cd knncmi
+
+pip install .
+
+cd ..
+```
+
+### 2. Clone this Repository
 ```bash
 git clone https://github.com/gmpal/IJF-TD2C.git
 cd IJF-TD2C
+
+# Install the required packages using pip
+pip install -r requirements.txt
+
 ```
 
-### 2. Download and Set Up the Data Folder
+### 3. Download and Set Up the Data Folder
 The `data` directory, which contains all datasets, pre-computed features, and cached results, is approximately 500MB and is not stored in this Git repository. You must download it separately to reproduce the analysis without re-running the most computationally expensive steps.
-
+Either manually:
 **[>> Download the `data.zip` file here <<](https://drive.google.com/file/d/1z8cHkUTe7TlvWwqBlpoEsukWaSsvFC26/view?usp=sharing)** 
+Or, using a shell: 
+```bash
+pip install gdown
 
-Once downloaded, unzip the file and place the resulting `data` folder in the root of the repository:
+gdown 1z8cHkUTe7TlvWwqBlpoEsukWaSsvFC26
+```
+Once downloaded, unzip the file and place the resulting `data` folder in the root of the repository. Either manually, or via shell:
+```bash
+python3 -m zipfile -e data.zip .
+```
 ```bash
 # After downloading data.zip to the repository root...
 unzip data.zip
@@ -92,20 +129,9 @@ ls
 # Expected output includes: data/  reproduce/  src/  results/  README.md ...
 ```
 
-### 3. Set Up the Conda Environment
-We strongly recommend using `conda` to manage dependencies.
-
-```bash
-# Create a new conda environment with Python 3.8
-conda create -n td2c python=3.8 -y
-
-# Activate the environment
-conda activate td2c
-
-# Install the required packages using pip
-pip install -r requirements.txt
-```
 Your environment is now ready.
+
+
 
 ---
 
