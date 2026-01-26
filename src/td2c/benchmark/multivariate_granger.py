@@ -1,4 +1,4 @@
-from d2c.benchmark.base import BaseCausalInference
+from td2c.benchmark.base import BaseCausalInference
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.api import VAR

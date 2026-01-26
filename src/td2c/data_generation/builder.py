@@ -5,7 +5,7 @@ This module is responsible for generating time series data based on the specifie
 import pickle
 import numpy as np
 import networkx as nx
-from d2c.data_generation.models import model_registry
+from td2c.data_generation.models import model_registry
 
 
 class TSBuilder:
@@ -145,7 +145,7 @@ class TSBuilder:
                             f"Unknown noise distribution: '{self.noise_dist}'. "
                             "Choose from 'gaussian', 'laplace', 'uniform'."
                         )
-                    
+
                     # noise to zero
                     # W = np.zeros((total_ts_lines, self.n_variables))
                     size_N_j = np.random.randint(

@@ -1,4 +1,4 @@
-from d2c.benchmark.base import BaseCausalInference
+from td2c.benchmark.base import BaseCausalInference
 
 from statsmodels.tsa.stattools import grangercausalitytests
 import numpy as np
@@ -7,28 +7,31 @@ from statsmodels.tools.sm_exceptions import InfeasibleTestError
 import pandas as pd
 import pickle
 
+
 class Granger(BaseCausalInference):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def infer(self, single_ts,**kwargs):
+    def infer(self, single_ts, **kwargs):
         results = {}
 
         for x1 in range(single_ts.shape[1]):
             gc2 = {}
             for x2 in range(single_ts.shape[1]):
                 try:
-                    gc_res = grangercausalitytests(single_ts[:,[x1,x2]], self.maxlags, verbose=False)
+                    gc_res = grangercausalitytests(
+                        single_ts[:, [x1, x2]], self.maxlags, verbose=False
+                    )
                     gc_res_lags = {}
-                    for lag in range(1,self.maxlags+1):
-                        gc_res_lags[lag] = gc_res[lag][0]['ssr_ftest'][1]
+                    for lag in range(1, self.maxlags + 1):
+                        gc_res_lags[lag] = gc_res[lag][0]["ssr_ftest"][1]
                 except InfeasibleTestError:
-                    gc_res_lags = {lag:np.nan for lag in range(1,self.maxlags+1)}
-                gc2[int(x2)] = gc_res_lags 
-            results[int(x1)] = gc2 
+                    gc_res_lags = {lag: np.nan for lag in range(1, self.maxlags + 1)}
+                gc2[int(x2)] = gc_res_lags
+            results[int(x1)] = gc2
 
         return results
-    
+
     def build_causal_df(self, results, n_variables):
         """
         grangercausalitytests returns a this structure for each pair of variables:
@@ -46,21 +49,29 @@ class Granger(BaseCausalInference):
 
         We check the p-value of the ssr_ftest to build the causal df.
         """
-        #initialization
-        pairs = [(source, effect) for source in range(n_variables, n_variables * self.maxlags + n_variables) for effect in range(n_variables)]
-        multi_index = pd.MultiIndex.from_tuples(pairs, names=['from', 'to'])
-        causal_dataframe = pd.DataFrame(index=multi_index, columns=['effect', 'p_value', 'probability', 'is_causal'])
+        # initialization
+        pairs = [
+            (source, effect)
+            for source in range(n_variables, n_variables * self.maxlags + n_variables)
+            for effect in range(n_variables)
+        ]
+        multi_index = pd.MultiIndex.from_tuples(pairs, names=["from", "to"])
+        causal_dataframe = pd.DataFrame(
+            index=multi_index, columns=["effect", "p_value", "probability", "is_causal"]
+        )
 
         for lag in range(self.maxlags):
             for source in range(n_variables):
                 for effect in range(n_variables):
-                    current_pvalue = results[source][effect][lag+1]
-                    
-                    is_causal = 0 if current_pvalue > 0.05 else 1
-                    
-                    causal_dataframe.loc[(n_variables + source+lag*n_variables, effect)] = None, current_pvalue, None, is_causal 
+                    current_pvalue = results[source][effect][lag + 1]
 
-        #break the multiindex into columns (from and to)
+                    is_causal = 0 if current_pvalue > 0.05 else 1
+
+                    causal_dataframe.loc[
+                        (n_variables + source + lag * n_variables, effect)
+                    ] = (None, current_pvalue, None, is_causal)
+
+        # break the multiindex into columns (from and to)
         causal_dataframe.reset_index(inplace=True)
 
         return causal_dataframe

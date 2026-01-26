@@ -4,25 +4,25 @@ import numpy as np
 from scipy.stats import kurtosis, skew
 from tqdm.auto import tqdm
 
-from d2c.descriptors.utils import (
+from td2c.descriptors.utils import (
     coeff,
     HOC,
     compute_partial_correlation_using_residuals,
     compute_residuals_correlation_with_inputs,
-    node_to_var_lag, var_lag_to_node
+    node_to_var_lag,
+    var_lag_to_node,
 )
 
-from d2c.descriptors.estimators import (
-    MarkovBlanketEstimator,
-    OptimizedMIEstimator
-)
+from td2c.descriptors.estimators import MarkovBlanketEstimator, OptimizedMIEstimator
 
 
 def _d2c_worker_with_dag(args):
     """Helper function to allow instance methods to be used by pool.imap_unordered."""
     # Unpack the instance of the D2C class and the rest of the arguments
     d2c_instance, dag_idx, dag, n_vars, maxlags, num_samples = args
-    return d2c_instance.compute_descriptors_with_dag(dag_idx, dag, n_vars, maxlags, num_samples)
+    return d2c_instance.compute_descriptors_with_dag(
+        dag_idx, dag, n_vars, maxlags, num_samples
+    )
 
 
 def _d2c_worker_for_couple(args):
@@ -31,7 +31,10 @@ def _d2c_worker_for_couple(args):
     Accepts pre-computed Markov Blankets.
     """
     d2c_instance, dag_idx, ca, ef, label, MBca, MBef = args
-    return d2c_instance.compute_descriptors_for_couple(dag_idx, ca, ef, label, MBca, MBef)
+    return d2c_instance.compute_descriptors_for_couple(
+        dag_idx, ca, ef, label, MBca, MBef
+    )
+
 
 # Add this small helper to the top level of d2c.py for the MB parallelization
 def _run_mb_func(func, dataset, node):
@@ -106,7 +109,7 @@ class D2C:
         mutual_information_proxy="Ridge",
         proxy_params=None,
         full=False,
-        dynamic=False,          
+        dynamic=False,
         verbose=False,
         cmi="ksg",
         mb_estimator="original",
@@ -169,7 +172,11 @@ class D2C:
                     self.maxlags,
                     num_samples=num_samples,
                 )
-                for dag_idx, dag in tqdm(enumerate(self.DAGs), total=len(self.DAGs), desc="Computing Descriptors")
+                for dag_idx, dag in tqdm(
+                    enumerate(self.DAGs),
+                    total=len(self.DAGs),
+                    desc="Computing Descriptors",
+                )
             ]
 
         else:
@@ -177,11 +184,13 @@ class D2C:
                 (self, dag_idx, dag, self.n_variables, self.maxlags, num_samples)
                 for dag_idx, dag in enumerate(self.DAGs)
             ]
-            
+
             with Pool(processes=self.n_jobs) as pool:
                 # Call the top-level worker function
                 results_iterator = pool.imap_unordered(_d2c_worker_with_dag, args)
-                results = list(tqdm(results_iterator, total=len(args), desc="Processing DAGs"))
+                results = list(
+                    tqdm(results_iterator, total=len(args), desc="Processing DAGs")
+                )
 
         # merge lists into a single list
         results = [item for sublist in results for item in sublist]
@@ -200,25 +209,33 @@ class D2C:
         # We assume there is only one observation set at index 0
         if not self.observations or len(self.observations) == 0:
             raise ValueError("Observations are required for this method.")
-        observations = self.observations[0] 
+        observations = self.observations[0]
 
-        all_possible_links = list({ # Using a list for stable order
-            (i, j)
-            for i in range(n_variables, n_variables + n_variables * maxlags)
-            for j in range(n_variables)
-            if i != j
-        })
+        all_possible_links = list(
+            {  # Using a list for stable order
+                (i, j)
+                for i in range(n_variables, n_variables + n_variables * maxlags)
+                for j in range(n_variables)
+                if i != j
+            }
+        )
 
         # --- PRE-COMPUTATION OF MARKOV BLANKETS ---
         # This is CRITICAL for performance when parallelizing by couple.
-        all_involved_nodes = set(node for couple in all_possible_links for node in couple)
-        
+        all_involved_nodes = set(
+            node for couple in all_possible_links for node in couple
+        )
+
         precomputed_markov_blankets = {}
         if self.verbose:
             print(f"Pre-computing MBs for {len(all_involved_nodes)} unique nodes...")
 
-        mb_func = self.markov_blanket_estimator.estimate if self.mb_estimator == "original" else self.markov_blanket_estimator.estimate_time_series
-        
+        mb_func = (
+            self.markov_blanket_estimator.estimate
+            if self.mb_estimator == "original"
+            else self.markov_blanket_estimator.estimate_time_series
+        )
+
         # We can parallelize the MB computation itself!
         mb_nodes = list(all_involved_nodes)
         if self.n_jobs > 1 and len(mb_nodes) > self.n_jobs:
@@ -228,7 +245,7 @@ class D2C:
                 # A simple starmap to run in parallel
                 mb_results = pool.starmap(_run_mb_func, mb_args)
             precomputed_markov_blankets = dict(zip(mb_nodes, mb_results))
-        else: # Or run sequentially
+        else:  # Or run sequentially
             for node in mb_nodes:
                 precomputed_markov_blankets[node] = mb_func(observations, node=node)
         # --- END OF PRE-COMPUTATION ---
@@ -237,24 +254,38 @@ class D2C:
         # Prepare arguments for each couple, including the pre-computed MBs
         args_for_couples = [
             (
-                self, 0, ca, ef, np.nan,
+                self,
+                0,
+                ca,
+                ef,
+                np.nan,
                 precomputed_markov_blankets.get(ca),
-                precomputed_markov_blankets.get(ef)
+                precomputed_markov_blankets.get(ef),
             )
             for ca, ef in all_possible_links
         ]
-        
+
         if self.n_jobs == 1:
             results = [
-                self.compute_descriptors_for_couple(*arg[1:]) # Unpack args, skip self
+                self.compute_descriptors_for_couple(*arg[1:])  # Unpack args, skip self
                 for arg in args_for_couples
             ]
         else:
-            print(f"Running descriptor computation in parallel with {self.n_jobs} jobs...")
+            print(
+                f"Running descriptor computation in parallel with {self.n_jobs} jobs..."
+            )
             with Pool(processes=self.n_jobs) as pool:
-                results_iterator = pool.imap_unordered(_d2c_worker_for_couple, args_for_couples)
-                results = list(tqdm(results_iterator, total=len(args_for_couples), desc="Computing Descriptors"))
-                
+                results_iterator = pool.imap_unordered(
+                    _d2c_worker_for_couple, args_for_couples
+                )
+                results = list(
+                    tqdm(
+                        results_iterator,
+                        total=len(args_for_couples),
+                        desc="Computing Descriptors",
+                    )
+                )
+
         return pd.DataFrame(results)
 
     def compute_descriptors_with_dag(
@@ -277,11 +308,13 @@ class D2C:
         """
 
         if not maxlags > 0:
-            raise ValueError("maxlags must be greater than 0 for the current version of TD2C.")
+            raise ValueError(
+                "maxlags must be greater than 0 for the current version of TD2C."
+            )
 
         x_y_couples = []
 
-        observations = self.observations[dag_idx] 
+        observations = self.observations[dag_idx]
 
         all_possible_links = {
             (i, j)
@@ -296,15 +329,18 @@ class D2C:
             ).intersection(all_possible_links)
         )
         non_causal_links = list(all_possible_links - set(causal_links))
-        
 
         all_involved_nodes = set()
-    
+
         if num_samples != -1:
             # Sample the links first to know which nodes we need
-            subset_causal_links = np.random.permutation(causal_links)[:min(len(causal_links), num_samples)].astype(int)
-            subset_non_causal_links = np.random.permutation(non_causal_links)[:min(len(non_causal_links), num_samples)].astype(int)
-            
+            subset_causal_links = np.random.permutation(causal_links)[
+                : min(len(causal_links), num_samples)
+            ].astype(int)
+            subset_non_causal_links = np.random.permutation(non_causal_links)[
+                : min(len(non_causal_links), num_samples)
+            ].astype(int)
+
             # Collect all unique nodes from the sampled couples
             for parent, child in subset_causal_links:
                 all_involved_nodes.add(parent)
@@ -317,9 +353,11 @@ class D2C:
         # 2. Pre-compute Markov Blankets for only the necessary nodes
         # This avoids computing MBs for nodes that aren't part of any sampled couple.
         precomputed_markov_blankets = {}
-        
+
         if self.verbose:
-            print(f"DAG {dag_idx}: Pre-computing MBs for {len(nodes_to_compute_mb_for)} unique nodes...")
+            print(
+                f"DAG {dag_idx}: Pre-computing MBs for {len(nodes_to_compute_mb_for)} unique nodes..."
+            )
 
         # Choose the correct estimator based on the setting
         if self.mb_estimator == "original":
@@ -331,22 +369,32 @@ class D2C:
 
         for node in nodes_to_compute_mb_for:
             precomputed_markov_blankets[node] = mb_func(observations, node=node)
-        
+
         # --- End of Pre-computation Logic ---
-            
+
         if num_samples == -1:
             for parent, child in causal_links:
                 x_y_couples.append(
-                    self.compute_descriptors_for_couple(dag_idx, parent, child, label=1,
-                                                        MBca=precomputed_markov_blankets.get(parent), # Use .get() for safety
-                                                        MBef=precomputed_markov_blankets.get(child))
+                    self.compute_descriptors_for_couple(
+                        dag_idx,
+                        parent,
+                        child,
+                        label=1,
+                        MBca=precomputed_markov_blankets.get(
+                            parent
+                        ),  # Use .get() for safety
+                        MBef=precomputed_markov_blankets.get(child),
+                    )
                 )  # causal
             for node_a, node_b in non_causal_links:
                 x_y_couples.append(
                     self.compute_descriptors_for_couple(
-                        dag_idx, node_a, node_b, label=0,
+                        dag_idx,
+                        node_a,
+                        node_b,
+                        label=0,
                         MBca=precomputed_markov_blankets.get(node_a),
-                        MBef=precomputed_markov_blankets.get(node_b)
+                        MBef=precomputed_markov_blankets.get(node_b),
                     )
                 )  # noncausal
 
@@ -357,17 +405,24 @@ class D2C:
 
             for parent, child in subset_causal_links:
                 x_y_couples.append(
-                    self.compute_descriptors_for_couple(dag_idx, parent, child, label=1,
-                                                        MBca=precomputed_markov_blankets[parent],
-                                                        MBef=precomputed_markov_blankets[child]
-                                                        )
+                    self.compute_descriptors_for_couple(
+                        dag_idx,
+                        parent,
+                        child,
+                        label=1,
+                        MBca=precomputed_markov_blankets[parent],
+                        MBef=precomputed_markov_blankets[child],
+                    )
                 )  # causal
             for node_a, node_b in subset_non_causal_links:
                 x_y_couples.append(
                     self.compute_descriptors_for_couple(
-                        dag_idx, node_a, node_b, label=0,
-                    MBca=precomputed_markov_blankets[node_a],
-                    MBef=precomputed_markov_blankets[node_b]
+                        dag_idx,
+                        node_a,
+                        node_b,
+                        label=0,
+                        MBca=precomputed_markov_blankets[node_a],
+                        MBef=precomputed_markov_blankets[node_b],
                     )
                 )  # noncausal
 
@@ -382,14 +437,14 @@ class D2C:
 
         If the population is small (<= 4), it creates specific, interpretable features
         from the raw values (e.g., _parent, _child).
-        
+
         If the population is larger, it falls back to summary statistics (mean, std).
         """
         pop_size = len(population)
 
         if pop_size == 0:
             # Handle the case of an empty population
-            dictionary[f"{name}_parent"] = 0.0 # Or np.nan
+            dictionary[f"{name}_parent"] = 0.0  # Or np.nan
             dictionary[f"{name}_child"] = 0.0  # Or np.nan
             return
 
@@ -407,14 +462,14 @@ class D2C:
         elif pop_size == 4:
             # This handles cases like mca_mef_cau.
             # The order is [P_ca-P_ef, P_ca-C_ef, C_ca-P_ef, C_ca-C_ef]
-            dictionary[f"{name}_pp"] = population[0] # Parent-Parent
-            dictionary[f"{name}_pc"] = population[1] # Parent-Child
-            dictionary[f"{name}_cp"] = population[2] # Child-Parent
-            dictionary[f"{name}_cc"] = population[3] # Child-Child
-        
+            dictionary[f"{name}_pp"] = population[0]  # Parent-Parent
+            dictionary[f"{name}_pc"] = population[1]  # Parent-Child
+            dictionary[f"{name}_cp"] = population[2]  # Child-Parent
+            dictionary[f"{name}_cc"] = population[3]  # Child-Child
+
         dictionary[f"{name}_mean"] = np.mean(population)
         dictionary[f"{name}_std"] = np.std(population)
-        
+
     def compute_dynamic_descriptors(self, observations, ca, ef, CMI, min_k=1, max_k=15):
         """
         Computes a set of dynamic descriptors based on a generalized Transfer Entropy.
@@ -424,19 +479,19 @@ class D2C:
         te_values = {}
 
         # --- Step 1: Build the temporary, extended observation matrix up to max_k ---
-        ts_data = observations[:, :self.n_variables]
+        ts_data = observations[:, : self.n_variables]
         n_samples = ts_data.shape[0]
 
         if n_samples <= max_k:
             return {}
-            
+
         all_lagged_blocks = [ts_data]
         for lag in range(1, max_k + 1):
-            lagged_block = ts_data[:n_samples - lag, :]
+            lagged_block = ts_data[: n_samples - lag, :]
             padding = np.full((lag, self.n_variables), np.nan)
             padded_block = np.vstack([padding, lagged_block])
             all_lagged_blocks.append(padded_block)
-        
+
         extended_obs = np.concatenate(all_lagged_blocks, axis=1)
         # handle nans
         extended_obs = np.nan_to_num(extended_obs, nan=0.0)  # Replace NaNs with 0.0
@@ -447,23 +502,35 @@ class D2C:
 
         forward_te_variants = []
         backward_te_variants = []
-        
+
         temp_maxlags = max_k
 
         for k in range(min_k, max_k + 1):
             # --- Forward Test: I(Z_i(t-1); Z_j(t) | Z_j(t-k)) ---
-            source_fw_node = var_lag_to_node(ca_var_idx, 1, self.n_variables, temp_maxlags) # Fixed to lag 1
-            target_fw_node = var_lag_to_node(ef_var_idx, 0, self.n_variables, temp_maxlags) # Fixed to lag 0
-            cond_fw_node = var_lag_to_node(ef_var_idx, k, self.n_variables, temp_maxlags)   # Variable lag k
-            
+            source_fw_node = var_lag_to_node(
+                ca_var_idx, 1, self.n_variables, temp_maxlags
+            )  # Fixed to lag 1
+            target_fw_node = var_lag_to_node(
+                ef_var_idx, 0, self.n_variables, temp_maxlags
+            )  # Fixed to lag 0
+            cond_fw_node = var_lag_to_node(
+                ef_var_idx, k, self.n_variables, temp_maxlags
+            )  # Variable lag k
+
             fw_cmi = CMI(extended_obs, source_fw_node, target_fw_node, [cond_fw_node])
             forward_te_variants.append(fw_cmi)
 
             # --- Backward Test: I(Z_j(t-1); Z_i(t) | Z_i(t-k)) ---
-            source_bw_node = var_lag_to_node(ef_var_idx, 1, self.n_variables, temp_maxlags) # Fixed to lag 1
-            target_bw_node = var_lag_to_node(ca_var_idx, 0, self.n_variables, temp_maxlags) # Fixed to lag 0
-            cond_bw_node = var_lag_to_node(ca_var_idx, k, self.n_variables, temp_maxlags)   # Variable lag k
-            
+            source_bw_node = var_lag_to_node(
+                ef_var_idx, 1, self.n_variables, temp_maxlags
+            )  # Fixed to lag 1
+            target_bw_node = var_lag_to_node(
+                ca_var_idx, 0, self.n_variables, temp_maxlags
+            )  # Fixed to lag 0
+            cond_bw_node = var_lag_to_node(
+                ca_var_idx, k, self.n_variables, temp_maxlags
+            )  # Variable lag k
+
             bw_cmi = CMI(extended_obs, source_bw_node, target_bw_node, [cond_bw_node])
             backward_te_variants.append(bw_cmi)
 
@@ -473,20 +540,24 @@ class D2C:
             bwd_mean = np.mean(backward_te_variants)
             fwd_std = np.std(forward_te_variants)
             bwd_std = np.std(backward_te_variants)
-            
+
             # The main feature: overall asymmetry in the window
-            te_values[f'te_asymmetry_diff_{min_k}_{max_k}'] = fwd_mean - bwd_mean
-            
+            te_values[f"te_asymmetry_diff_{min_k}_{max_k}"] = fwd_mean - bwd_mean
+
             # Also include the value for k=1, which is the standard Transfer Entropy
             # This assumes min_k is 1
             if min_k == 1:
-                te_values['transfer_entropy_fwd'] = forward_te_variants[0]
-                te_values['transfer_entropy_bwd'] = backward_te_variants[0]
-                te_values['transfer_entropy_diff'] = forward_te_variants[0] - backward_te_variants[0]
-            
+                te_values["transfer_entropy_fwd"] = forward_te_variants[0]
+                te_values["transfer_entropy_bwd"] = backward_te_variants[0]
+                te_values["transfer_entropy_diff"] = (
+                    forward_te_variants[0] - backward_te_variants[0]
+                )
+
         return te_values
 
-    def compute_descriptors_for_couple(self, dag_idx, ca, ef, label, MBca=None, MBef=None):
+    def compute_descriptors_for_couple(
+        self, dag_idx, ca, ef, label, MBca=None, MBef=None
+    ):
         """
         Compute descriptors for a given couple of nodes in a directed acyclic graph (DAG).
 
@@ -576,15 +647,15 @@ class D2C:
         # I(cause; m | effect) for m in MBef
         # cau_m_eff = [0] if not len(MBef) else [CMI(c, observations[:, m], e) for m in MBef]
         cau_m_eff = [0] if not len(MBef) else [CMI(observations, c, m, e) for m in MBef]
-        
+
         # I(effect; m | cause) for m in MBca
         # eff_m_cau = [0] if not len(MBca) else [CMI(e, observations[:, m], c) for m in MBca]
         eff_m_cau = [0] if not len(MBca) else [CMI(observations, e, m, c) for m in MBca]
-        
+
         # I(m; cause) for m in MBef
         # m_cau = [0] if not len(MBef) else [CMI(c, observations[:, m]) for m in MBef]
         m_cau = [0] if not len(MBef) else [CMI(observations, c, m) for m in MBef]
-        
+
         # I(cause; effect | common_causes)
         # values['com_cau'] = CMI(e, c, observations[:, common_causes])
         values["com_cau"] = CMI(observations, e, c, common_causes)
@@ -615,7 +686,7 @@ class D2C:
                 for m in MBef
             ]
         )
-        
+
         # I(cause; effect | arrays_m_plus_MBef)
         # cau_eff_mbeff_plus = [0] if not len(MBca) else [CMI(e, c, observations[:,np.unique(np.concatenate(([m], MBef)))]) for m in MBca]
         cau_eff_mbeff_plus = (
@@ -626,11 +697,11 @@ class D2C:
                 for m in MBca
             ]
         )
-        
+
         # I(m; effect) for m in MBca
         # m_eff = [0] if not len(MBca) else [CMI(e, observations[:, m]) for m in MBca]
         m_eff = [0] if not len(MBca) else [CMI(observations, e, m) for m in MBca]
-        
+
         # I(mca ; mca| cause) - I(mca ; mca) for (mca,mca) in mbca_couples
         # mca_mca_cau = [0] if not len(mbca_mbca_couples) else [CMI(observations[:,i], observations[:,j], c) - CMI(observations[:,i], observations[:,j]) for i, j in mbca_mbca_couples]
         mca_mca_cau = (
@@ -641,7 +712,7 @@ class D2C:
                 for i, j in mbca_mbca_couples
             ]
         )
-        
+
         # I(mbe ; mbe| effect) - I(mbe ; mbe) for (mbe,mbe) in mbef_couples
         # mbe_mbe_eff = [0] if not len(mbef_mbef_couples) else [CMI(observations[:,i], observations[:,j], e) - CMI(observations[:,i], observations[:,j]) for i, j in mbef_mbef_couples]
         mbe_mbe_eff = (
@@ -662,11 +733,11 @@ class D2C:
         self.update_dictionary_from_population(values, "eff_m_cau", eff_m_cau)
         self.update_dictionary_from_population(values, "m_cau", m_cau)
         self.update_dictionary_from_population(
-                values, "eff_cau_mbcau_plus", eff_cau_mbcau_plus
-            )
+            values, "eff_cau_mbcau_plus", eff_cau_mbcau_plus
+        )
         self.update_dictionary_from_population(
-                values, "cau_eff_mbeff_plus", cau_eff_mbeff_plus
-            )
+            values, "cau_eff_mbeff_plus", cau_eff_mbeff_plus
+        )
         self.update_dictionary_from_population(values, "m_eff", m_eff)
 
         self.update_dictionary_from_population(values, "mca_mca_cau", mca_mca_cau)
