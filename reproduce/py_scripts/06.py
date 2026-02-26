@@ -1,6 +1,8 @@
 # %%
 # avoids the need for users to install TD2C as a package
 import sys
+import matplotlib
+matplotlib.use("agg")
 
 sys.path.append("../../")
 
@@ -510,6 +512,6 @@ summary_stats = df.groupby(["Dataset", "Method"])["Balanced Accuracy"].agg(
 print(summary_stats.round(4))
 print("=" * 60)
 
-plt.show()
+plt.close("all")
 
 # %%

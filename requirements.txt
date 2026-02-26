@@ -51,3 +51,5 @@ dcor==0.6     # Distance correlation
 # Jupyter Notebooks
 jupyter==1.1.1
 ipykernel==6.29.5
+
+imbalanced-learn==0.11.0

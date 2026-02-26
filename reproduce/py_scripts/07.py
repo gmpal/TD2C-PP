@@ -32,7 +32,14 @@ from sklearn.metrics import (
 # =============================================================================
 # 1. SETUP AND CONFIGURATION
 # =============================================================================
-from src.td2c.benchmark.utils import draw_cd_diagram
+import importlib.util, pathlib
+_utils_spec = importlib.util.spec_from_file_location(
+    "benchmark_utils",
+    pathlib.Path(__file__).parents[2] / "src" / "td2c" / "benchmark" / "utils.py",
+)
+_utils_mod = importlib.util.module_from_spec(_utils_spec)
+_utils_spec.loader.exec_module(_utils_mod)
+draw_cd_diagram = _utils_mod.draw_cd_diagram
 
 THRESHOLD = 0.309
 

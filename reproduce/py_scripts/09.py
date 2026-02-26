@@ -6,9 +6,9 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 
 def main(n_jobs):
     all_datasets = {
-        "NETSIM_5": "data/descriptors/descriptors_netsim_5.pkl",
+        "NETSIM_5": "../../data/descriptors/descriptors_netsim_5.pkl",
         # ... Add other datasets ...
-        "SYNTHETIC": "data/descriptors/descriptors_df_test.pkl",
+        "SYNTHETIC": "../../data/descriptors/descriptors_df_test.pkl",
     }
     
     print(f"--- Calculating Feature Importance (n_jobs={n_jobs}) ---")

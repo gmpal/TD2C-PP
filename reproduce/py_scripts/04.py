@@ -51,9 +51,9 @@ def _load_testing_data():
 def main(n_jobs):
     MAXLAGS = 3
     THRESHOLD = 0.309
-    DESCRIPTORS_DIR = Path("data/descriptors/")
-    PRE_RESULTS_DIR = Path("data/before_d2c/")
-    RESULTS_DIR = Path("data/causal_dfs/")
+    DESCRIPTORS_DIR = Path("../../data/descriptors/")
+    PRE_RESULTS_DIR = Path("../../data/before_d2c/")
+    RESULTS_DIR = Path("../../data/causal_dfs/")
 
     PRE_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)

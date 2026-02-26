@@ -9,7 +9,7 @@ from sklearn.metrics import precision_recall_curve, roc_curve
 from imblearn.ensemble import BalancedRandomForestClassifier
 
 def main(n_jobs):
-    DESCRIPTORS_DIR = Path("data/descriptors/")
+    DESCRIPTORS_DIR = Path("../../data/descriptors/")
     TRAIN_DESCRIPTORS_FILE = "descriptors_df_train.pkl"
     
     print("=" * 60)

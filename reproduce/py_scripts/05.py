@@ -20,7 +20,7 @@ from sklearn.metrics import (
 
 
 def analyze_test_dataset(
-    test_pickle_path="data/causal_dfs/causal_dfs_TEST.pkl", output_dir="TEST_analysis"
+    test_pickle_path="../../data/causal_dfs/causal_dfs_TEST.pkl", output_dir="TEST_analysis"
 ):
     """
     Analyzes the TEST dataset by computing metrics for each error type and process.
