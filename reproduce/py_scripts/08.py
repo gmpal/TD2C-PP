@@ -21,15 +21,16 @@ def main(n_jobs_high):
     N_JOBS_D2C_LOW = 1
     # Use the passed argument for high jobs
     N_JOBS_D2C_HIGH = n_jobs_high 
-    TRAINING_DESCRIPTORS_PATH = "data/descriptors/descriptors_df_train.pkl" # Check path
-    RESULTS_SAVE_PATH = "data/benchmark_times_by_nvars.csv"
+    TRAINING_DESCRIPTORS_PATH = "../../data/descriptors/descriptors_df_train.pkl"
+    RESULTS_SAVE_PATH = "../../data/benchmark_times_by_nvars.csv"
 
     # Load Model
     print(f"Loading training data from {TRAINING_DESCRIPTORS_PATH}...")
     descriptors_df_train = pd.read_pickle(TRAINING_DESCRIPTORS_PATH)
     X_train = descriptors_df_train.drop(columns=["graph_id", "edge_source", "edge_dest", "is_causal"])
+    X_train.fillna(0, inplace=True)
     y_train = descriptors_df_train["is_causal"]
-    
+
     clf = BalancedRandomForestClassifier(n_estimators=500, n_jobs=1, random_state=42)
     clf.fit(X_train, y_train)
 

@@ -4,7 +4,7 @@ pandas==1.5.3
 scipy==1.10.1
 
 # Machine Learning
-scikit-learn
+scikit-learn==1.6.1
 
 # Statistics and Time Series
 statsmodels==0.14.1
@@ -23,13 +23,14 @@ tqdm==4.66.5
 cachetools==5.5.0
 
 # Time series causality methods
-tigramite
+tigramite==5.2.10.1
 
 # LiNGAM methods
-lingam
+lingam==1.12.2
 
 # CausalNex (for DYNOTEARS)
-causalnex
+causalnex==0.12.1
+torch==2.5.0  # Transitive dep of causalnex; 2.10+ has DLL issues on Windows
 
 # Copula estimation
 pyvinecopulib==0.7.1
@@ -52,4 +53,4 @@ dcor==0.6     # Distance correlation
 jupyter==1.1.1
 ipykernel==6.29.5
 
-imbalanced-learn==0.11.0
+imbalanced-learn==0.12.4

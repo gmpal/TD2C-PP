@@ -1,6 +1,6 @@
 # Causal Discovery in Multivariate Time Series through Mutual Information Featurization
 
-[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Paper](https://img.shields.io/badge/paper-arXiv-red.svg)](https://arxiv.org/abs/2508.01848)
 
@@ -67,26 +67,27 @@
 | **OS** | Linux | Any (tested on Windows 11) |
 | **CPU** | 40-core cluster node | Intel Core i7 |
 | **RAM** | 377 GB | 32 GB |
-| **Python** | 3.11.10 | 3.11.10 |
+| **Python** | 3.10 | 3.10 |
 | **`--n_jobs`** | 40 | 4 |
 
-**Language:** Python 3.11
+**Language:** Python 3.10
 **Package manager:** conda (miniforge recommended)
 **Key dependencies** (see `requirements.txt` for full list with pinned versions):
 
 | Package | Version | Purpose |
 |---|---|---|
-| `numpy` | 1.26.4 | Numerical computation |
-| `pandas` | 2.2.3 | Data manipulation |
+| `numpy` | 1.23.5 | Numerical computation |
+| `pandas` | 1.5.3 | Data manipulation |
 | `scikit-learn` | 1.6.1 | Machine learning metrics and classifiers |
-| `imbalanced-learn` | 0.11.0 | `BalancedRandomForestClassifier` |
+| `imbalanced-learn` | 0.12.4 | `BalancedRandomForestClassifier` |
 | `tigramite` | 5.2.10.1 | PCMCI implementation |
 | `lingam` | 1.12.2 | VARLiNGAM implementation |
 | `dcor` | 0.6 | Distance correlation (used by tigramite/GPDC) |
-| `matplotlib` | 3.9.2 | Plotting |
+| `causalnex` | 0.12.1 | DYNOTEARS implementation |
+| `matplotlib` | 3.7.5 | Plotting |
 | `seaborn` | 0.13.2 | Statistical visualisation |
-| `scipy` | 1.13.1 | Statistical tests (Wilcoxon, Friedman) |
-| `networkx` | 3.3 | Graph utilities |
+| `scipy` | 1.10.1 | Statistical tests (Wilcoxon, Friedman) |
+| `networkx` | 3.1 | Graph utilities |
 
 ---
 
@@ -95,7 +96,7 @@
 ### 1. Create conda environment
 
 ```bash
-conda create -n td2c python=3.11 -y
+conda create -n td2c python=3.10 -y
 conda activate td2c
 ```
 
@@ -208,20 +209,22 @@ python 09.py --n_jobs 4   # feature importance
 
 ## Paper Tables and Figures — Output Mapping
 
-| Paper item | Script | Output file |
+| Paper Item | Script | Output file |
 |---|---|---|
-| **Table 1** — Threshold selection metrics | `03.py` | Console output |
-| **Table 2** — Synthetic overall results | `05.py` | `TEST_analysis/tables/overall_macro_summary.csv` |
-| **Table 3** — Per-process results | `05.py` | `TEST_analysis/tables/macro_process_*.csv` |
-| **Table 4** — Realistic benchmark results | `06.py` | `REAL_analysis/tables/summary_macro_{NETSIM_5,NETSIM_10,DREAM3_10,DREAM3_50}.csv` |
+| **Table 1** — Path counting | `00.py` | Console output (theoretical; not in main pipeline) |
+| **Table 2** — Generation parameters | — | Descriptive table (not computationally generated) |
+| **Table 3** — Threshold selection metrics | `03.py` | Console output |
+| **Table 4** — Synthetic overall results | `05.py` | `TEST_analysis/tables/overall_macro_summary.csv` |
 | **Table 5** — Runtime per method | `08.py` | `data/benchmark_times_by_nvars.csv` |
 | **Table 6** — Feature importance | `09.py` | Console output |
-| **Figure 1** — F1-score boxplot (realistic) | `06.py` | `REAL_analysis/figures/summary_boxplot_all_datasets_F1-Score.png` |
-| **Figure 2a** — CD diagram (Precision) | `07.py` | `CD_PLOTS/cd_TEST_precision.png` |
-| **Figure 2b** — CD diagram (Recall) | `07.py` | `CD_PLOTS/cd_TEST_recall.png` |
-| **Figure 3a** — CD diagram (F1) | `07.py` | `CD_PLOTS/cd_TEST_f1.png` |
-| **Figure 3b** — CD diagram (Accuracy) | `07.py` | `CD_PLOTS/cd_TEST_accuracy.png` |
-| **Figure 3c** — CD diagram (Balanced Accuracy) | `07.py` | `CD_PLOTS/cd_TEST_balanced_accuracy.png` |
+| **Figure 1** — Markov Blanket DAG | — | Conceptual illustration (not computationally generated) |
+| **Figure 2** — Causal scenarios | — | Conceptual illustration (not computationally generated) |
+| **Figure 3** — F1-score boxplot (realistic) | `06.py` | `REAL_analysis/figures/summary_boxplot_all_datasets_F1-Score.png` |
+| **Figure 4a** — CD diagram (Precision) | `07.py` | `CD_PLOTS/cd_TEST_precision.png` |
+| **Figure 4b** — CD diagram (Recall) | `07.py` | `CD_PLOTS/cd_TEST_recall.png` |
+| *Appendix* — Per-process synthetic results | `05.py` | `TEST_analysis/tables/macro_process_*.csv` |
+| *Appendix* — Realistic benchmark details | `06.py` | `REAL_analysis/tables/summary_macro_{NETSIM_5,NETSIM_10,DREAM3_10,DREAM3_50}.csv` |
+| *Appendix* — CD diagrams (F1, Accuracy, Bal. Accuracy) | `07.py` | `CD_PLOTS/cd_TEST_{f1,accuracy,balanced_accuracy}.png` |
 
 ---
 

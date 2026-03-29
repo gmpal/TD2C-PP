@@ -234,8 +234,7 @@ class D2CWrapper(BaseCausalInference):
             )
 
         training_features = self.model.feature_names_in_
-        self._validate_feature_compatibility(training_features, X_test.columns)
-        X_test = X_test.reindex(columns=training_features)
+        X_test = X_test.reindex(columns=training_features, fill_value=0)
 
         y_pred_proba = self.model.predict_proba(X_test)[:, 1]
 

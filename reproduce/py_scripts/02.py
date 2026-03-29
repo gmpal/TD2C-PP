@@ -32,7 +32,7 @@ def compute_descriptors(data_type, input_prefix, output_file, n_vars, maxlags, n
     else:
         # Standard single file loading
         dl = DataLoader(n_variables=n_vars, maxlags=maxlags)
-        dl.from_pickle(f"realistic/{input_prefix}.pkl")
+        dl.from_pickle(f"../../data/realistic/{input_prefix}.pkl")
         final_obs = dl.get_observations()
         final_dags = dl.get_dags()
 

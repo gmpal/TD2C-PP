@@ -59,10 +59,10 @@ def main(n_jobs):
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
     DATASETS_TO_PROCESS = [
-        {"name": "DREAM3_10", "n_vars": 10, "input_file": "data/realistic/dream3/dream3_10.pkl", "d2c_descriptors_file": "descriptors_dream3_10.pkl"},
-        {"name": "DREAM3_50", "n_vars": 50, "input_file": "data/realistic/dream3/dream3_50.pkl", "d2c_descriptors_file": "descriptors_dream3_50.pkl"},
-        {"name": "NETSIM_5", "n_vars": 5, "input_file": "data/realistic/netsym/netsym_5.pkl", "d2c_descriptors_file": "descriptors_netsim_5.pkl"},
-        {"name": "NETSIM_10", "n_vars": 10, "input_file": "data/realistic/netsym/netsym_10.pkl", "d2c_descriptors_file": "descriptors_netsim_10.pkl"},
+        {"name": "DREAM3_10", "n_vars": 10, "input_file": "../../data/realistic/dream3/dream3_10.pkl", "d2c_descriptors_file": "descriptors_dream3_10.pkl"},
+        {"name": "DREAM3_50", "n_vars": 50, "input_file": "../../data/realistic/dream3/dream3_50.pkl", "d2c_descriptors_file": "descriptors_dream3_50.pkl"},
+        {"name": "NETSIM_5", "n_vars": 5, "input_file": "../../data/realistic/netsym/netsym_5.pkl", "d2c_descriptors_file": "descriptors_netsim_5.pkl"},
+        {"name": "NETSIM_10", "n_vars": 10, "input_file": "../../data/realistic/netsym/netsym_10.pkl", "d2c_descriptors_file": "descriptors_netsim_10.pkl"},
         {"name": "TEST", "n_vars": 5, "input_file": None, "d2c_descriptors_file": "descriptors_df_test.pkl"},
     ]
 

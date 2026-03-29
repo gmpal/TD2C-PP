@@ -256,7 +256,7 @@ def compute_residuals_correlation_with_inputs(
     Y = df[:, x2_name].reshape(-1, 1)
 
     model = Ridge(alpha=1.0).fit(X, Y)
-    resid_Y = Y - model.predict(X)
+    resid_Y = Y - model.predict(X).reshape(-1, 1)
 
     # print("resid_Y")
     # print(resid_Y.shape)
