@@ -61,10 +61,18 @@ def main(n_jobs_high):
                 results_list.append({"n_variables": n_vars, "method": name, "execution_time": time.time() - start})
             except Exception as e: print(e)
 
-        # Run PCMCI
+        # Run PCMCI (ParCorr)
         start = time.time()
         PCMCI(ts_list=orig_obs, maxlags=MAXLAGS, n_jobs=1, ci="ParCorr").run()
         results_list.append({"n_variables": n_vars, "method": "PCMCI (ParCorr)", "execution_time": time.time() - start})
+
+        # Run PCMCI (GPDC)
+        start = time.time()
+        try:
+            PCMCI(ts_list=orig_obs, maxlags=MAXLAGS, n_jobs=1, ci="GPDC").run()
+            results_list.append({"n_variables": n_vars, "method": "PCMCI (GPDC)", "execution_time": time.time() - start})
+        except Exception as e:
+            print(f"PCMCI (GPDC) failed for n_vars={n_vars}: {e}")
 
         # Run D2C Low
         start = time.time()

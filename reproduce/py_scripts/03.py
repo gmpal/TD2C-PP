@@ -47,7 +47,8 @@ def main(n_jobs):
             n_jobs=n_jobs,
             random_state=42,
             sampling_strategy="auto",
-            replacement=True
+            replacement=True,
+            bootstrap=True,  # explicit: locks behavior across imblearn versions (default changes to False in v0.13)
         )
         clf_fold.fit(X_train_fold, y_train_fold)
         y_proba_val_fold = clf_fold.predict_proba(X_val_fold)[:, 1]
