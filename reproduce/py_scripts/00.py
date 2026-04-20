@@ -31,18 +31,36 @@ rules_latent = rules_complex + [
 # --- Generate and Print Results ---
 length = 10
 
+def print_scenario(label, df):
+    """Print scenario table with Forward, Backward, and Difference (Delta) rows."""
+    fw_col = [c for c in df.columns if c.startswith("FW")][0]
+    bw_col = [c for c in df.columns if c.startswith("BW")][0]
+    print(f"{'Lag (k)':<10}", end="")
+    for lag in df["Lag (k)"]:
+        print(f"{lag:>8}", end="")
+    print()
+    print(f"{'Forward':.<10}", end="")
+    for val in df[fw_col]:
+        print(f"{val:>8}", end="")
+    print()
+    print(f"{'Backward':.<10}", end="")
+    for val in df[bw_col]:
+        print(f"{val:>8}", end="")
+    print()
+    diff = df[fw_col].values - df[bw_col].values
+    print(f"{'Delta':.<10}", end="")
+    for val in diff:
+        print(f"{val:>8}", end="")
+    print("\n")
+
 print("=" * 35 + " SCENARIO 1: Simple Case " + "=" * 35)
 df_simple = run_long_range_analysis(rules_simple, length)
-print(df_simple.to_string(index=False))
-print("\n")
+print_scenario("Simple", df_simple)
 
 print("=" * 35 + " SCENARIO 2: Complex Case " + "=" * 35)
 df_complex = run_long_range_analysis(rules_complex, length)
-print(df_complex.to_string(index=False))
-print("\n")
+print_scenario("Complex", df_complex)
 
-
-print("=" * 35 + " SCENARIO 2: Latent Case " + "=" * 35)
+print("=" * 35 + " SCENARIO 3: Latent Case " + "=" * 35)
 df_latent = run_long_range_analysis(rules_latent, length)
-print(df_latent.to_string(index=False))
-print("\n")
+print_scenario("Latent", df_latent)
