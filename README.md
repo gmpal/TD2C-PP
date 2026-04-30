@@ -132,6 +132,16 @@ python3 -m zipfile -e data.zip .
 
 Place the resulting `data/` folder in the root of the repository.
 
+> **⚠️ Important — verify your pre-computed files before running `05.py`, `06.py`, or `07.py`.**
+> Running `04.py` **without** the `--skip_benchmark` flag will overwrite `data/causal_dfs/*.pkl` with freshly generated results, which introduces non-determinism from `BalancedRandomForestClassifier`. To reproduce Tables 4, G.13, and H.14 and Figure I.6 accurately, always use the pre-computed files from `data.zip`.
+>
+> You can verify you have the correct file with:
+> ```bash
+> md5sum data/causal_dfs/causal_dfs_TEST.pkl
+> # Expected: 4b49870ad8685e2cb3885d3495d1b9a6
+> ```
+> If the checksum does not match, re-download `data.zip` and extract again.
+
 ---
 
 ## Data Description
